@@ -1,18 +1,18 @@
 #pragma once
-# include "storage/SettingsManager.h"
+#include "storage/SettingsManager.h"
 
 bool SettingsManager::begin() {
     return preferences.begin(NAMESPACE_NAME, false);
 }
 
 bool SettingsManager::load(SystemSettings& settings) {
-    settings.maxTemp = preferences.getInt("MaxTemp", 30);
-    settings.minTemp = preferences.getInt("MinTemp", 20);
-    settings.stirIntervalMinutes = preferences.getInt("StirrInt", 30);
-    settings.stirDurationMinutes = preferences.getInt("StirrDur", 1);
-    settings.lightOnHour = preferences.getInt("LightOn", 8);
-    settings.lightOffHour = preferences.getInt("LightOff", 20);
-    settings.measurementIntervalSeconds = preferences.getInt("MeasInt", 1);
+    settings.maxTemp = preferences.getInt("MaxTemp", DEFAULT_SETTINGS.maxTemp);
+    settings.minTemp = preferences.getInt("MinTemp", DEFAULT_SETTINGS.minTemp);
+    settings.stirIntervalMinutes = preferences.getInt("StirrInt", DEFAULT_SETTINGS.stirIntervalMinutes);
+    settings.stirDurationMinutes = preferences.getInt("StirrDur", DEFAULT_SETTINGS.stirDurationMinutes);
+    settings.lightOnHour = preferences.getInt("LightOn", DEFAULT_SETTINGS.lightOnHour);
+    settings.lightOffHour = preferences.getInt("LightOff", DEFAULT_SETTINGS.lightOffHour);
+    settings.measurementIntervalSeconds = preferences.getInt("MeasInt", DEFAULT_SETTINGS.measurementIntervalSeconds);
 
     return true;
 }
