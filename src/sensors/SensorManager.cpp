@@ -38,12 +38,12 @@ float SensorManager::readTds(float currentTemp)
   int analogVal = analogRead(Config::PIN_TDS);         
   float voltage = analogVal * Config::ADC_REFERENCE_VOLTAGE / Config::ADC_RESOLUTION; // convert to voltage
 
-  float compensationCoefficient = 1.0 + 0.02 * (currentTemp - 25.0);
+  float compensationCoefficient = 1.0f + 0.02f * (currentTemp - 25.0);
   float compensationVoltage = voltage / compensationCoefficient;
 
-  return (133.42 * compensationVoltage * compensationVoltage * compensationVoltage 
-        - 255.86 * compensationVoltage * compensationVoltage 
-        + 857.39 * compensationVoltage) * 0.5;
+  return (133.42f * compensationVoltage * compensationVoltage * compensationVoltage 
+        - 255.86f * compensationVoltage * compensationVoltage 
+        + 857.39f * compensationVoltage) * 0.5f;
 }
 
 float SensorManager::readTurbidity() {
@@ -60,12 +60,12 @@ int SensorManager::readWaterLevel() {
     digitalWrite(Config::PIN_TRIG, LOW);
 
     float duration = pulseIn(Config::PIN_ECHO, HIGH, 2600);
-    float distance = duration / 58.2;
+    float distance = duration / 58.2f;
 
-    constexpr float empty = 19.0;
-    constexpr float safe = 5.0;
+    constexpr float empty = 19.0f;
+    constexpr float safe = 5.0f;
 
-    int level = (int)((empty - distance) / (empty - safe)*100);
+    int level = (int)((empty - distance) / (empty - safe) * 100);
 
     if (level < 0) level = 0;
     if (level > 100) level = 100;
