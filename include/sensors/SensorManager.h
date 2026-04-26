@@ -24,4 +24,4 @@ class SensorManager{
         float readTds(float temp);
         float readTurbidity();
         int readWaterLevel();
-}
+};
