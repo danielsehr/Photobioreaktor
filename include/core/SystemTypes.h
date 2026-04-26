@@ -3,11 +3,12 @@
 
 
 struct SensorData {
+    unsigned long uptimeSeconds = 0;
+
     float temperature = NAN;
     float conductivity = NAN;
     float turbidity = NAN;
     int waterLevel = -1;
-    uint32_t uptimeSeconds = 0;
 };
 
 struct SystemSettings {
