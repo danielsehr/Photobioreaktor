@@ -1,17 +1,20 @@
 #include <Arduino.h>
 #include "config/SystemConfig.h"
 #include "core/SystemTypes.h"
-#include "storage/SettingsManager.h"
-#include "control/ControlManager.h"
+
 #include "sensors/SensorManager.h"
+#include "storage/SettingsManager.h"
+#include "storage/StorageMananger.h"
+#include "control/ControlManager.h"
 
 
 // Instantiate manager and settings
+SystemSettings settings;
+
 SensorManager sensorManager;
 SettingsManager settingsManager;
+StorageManager storageManager;
 ControlManager controlManager;
-
-SystemSettings settings;
 
 
 // Define timers and intervals
@@ -49,7 +52,8 @@ void setup()
 
   settingsManager.begin();
   settingsManager.load(settings);
-  
+
+  storageManager.begin();
   sensorManager.begin();
 
   Serial.println("System initialized");
@@ -85,6 +89,12 @@ void loop()
     lastLogUpdate = now;
 
     const auto& data = sensorManager.getData();
+
+    storageManager.appendMeasurement(
+      data,
+      currentDate,
+      currentTime
+    );
 
     Serial.printf(
       "T=%.2f Cond=%.2f Turb=%.2f Level=%d\n",
