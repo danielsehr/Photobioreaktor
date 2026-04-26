@@ -1,15 +1,20 @@
 #include "control/ControlManager.h"
 #include "config/SystemConfig.h"
 
-void ControlManager::update(const SensorData& data, const SystemSettings& settings) {
+void ControlManager::update(
+    const SensorData& data,
+    const SystemSettings& settings,
+    int currenHour
+    )
+{
     controlTemperature(data, settings);
     controlStirring(settings);
     controlLight(settings);
 }
 
 
-void ControlManager::controlTemperature(const SensorData& data, const SystemSettings& settings) {
-    // Check waterlevel and temp
+void ControlManager::controlTemperature(const SensorData& data, const SystemSettings& settings) 
+{
     bool waterOk = data.waterLevel > 50;
     bool tempValid = data.temperature > 0;
 

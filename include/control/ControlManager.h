@@ -4,7 +4,7 @@
 
 class ControlManager {
     public:
-        void update(const SensorData& data, const SystemSettings& settings);
+        void update(const SensorData& data, const SystemSettings& settings, int currentHour);
 
     private:
         void controlTemperature(const SensorData& data, const SystemSettings& settings);
