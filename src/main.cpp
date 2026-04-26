@@ -78,7 +78,7 @@ void loop()
     );
   }
 
-  
+
   // Log update
    if (now - lastLogUpdate >= LOG_INTERVAL_MS)
    {
