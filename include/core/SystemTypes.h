@@ -1,5 +1,5 @@
-// #pragma once // still not sure if we need this
-# include <Arduino.h>
+#pragma once 
+#include <Arduino.h>
 
 
 struct SensorData {
@@ -10,12 +10,12 @@ struct SensorData {
     uint32_t uptimeSeconds = 0;
 };
 
-struct SystemDefaultSettings {
+struct SystemSettings {
     int maxTemp = 30;
     int minTemp = 20;
     int stirIntervalMinutes = 30;
     int stirDurationMinutes = 1;
-    int lightOnHout = 8;
+    int lightOnHour = 8;
     int lightOffHour = 20;
     int measurementIntervalSeconds = 1;
 };
