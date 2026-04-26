@@ -20,4 +20,6 @@ struct SystemSettings {
     int measurementIntervalSeconds = 1;
 };
 
+inline constexpr SystemSettings DEFAULT_SETTINGS{};
+
 
