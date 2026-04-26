@@ -6,6 +6,7 @@
 #include "storage/SettingsManager.h"
 #include "storage/StorageMananger.h"
 #include "control/ControlManager.h"
+#include "time/RTCManager.h"
 
 
 // Instantiate manager and settings
@@ -15,6 +16,7 @@ SensorManager sensorManager;
 SettingsManager settingsManager;
 StorageManager storageManager;
 ControlManager controlManager;
+RTCManager rtcManager;
 
 
 // Define timers and intervals
@@ -55,6 +57,7 @@ void setup()
 
   storageManager.begin();
   sensorManager.begin();
+  rtcManager.begin();
 
   Serial.println("System initialized");
 }
@@ -78,7 +81,8 @@ void loop()
 
     controlManager.update(
       sensorManager.getData(),
-      settings
+      settings,
+      rtcManager.getHour()
     );
   }
 
@@ -90,10 +94,12 @@ void loop()
 
     const auto& data = sensorManager.getData();
 
+    rtcManager.update();
+
     storageManager.appendMeasurement(
       data,
-      currentDate,
-      currentTime
+      rtcManager.getDate(),
+      rtcManager.getTime()
     );
 
     Serial.printf(
