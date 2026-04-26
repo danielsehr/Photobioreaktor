@@ -34,7 +34,7 @@ bool StorageManager::appendMeasurement(const SensorData& data,
     File file = LittleFS.open(Config::DATA_FILE, "a");
     if(!file)
     {
-        Serial.println("CSV open failed!")
+        Serial.println("CSV open failed!");
         return false;
     }
 
