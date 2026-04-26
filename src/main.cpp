@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include "config/SystemConfig.h"
 #include "core/SystemTypes.h"
+#include "storage/SettingsManager.h"
+
+SettingsManager settingsManager;
+SystemSettings settings;
 
 
 // Functions
@@ -22,6 +26,9 @@ void initializePins() {
 void setup() {
   Serial.begin(115200);
   initializePins();
+
+  settingsManager.begin();
+  settingsManager.load(settings);
   
 }
 
