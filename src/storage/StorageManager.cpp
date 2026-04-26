@@ -25,6 +25,8 @@ bool StorageManager::createCsvIfMissing() {
     // Initial write of headers and close file
     file.println("uptime,temp,conductivity,turbidity,water_level,date,time");
     file.close();
+
+    return true;
 }
 
 bool StorageManager::appendMeasurement(const SensorData& data,
