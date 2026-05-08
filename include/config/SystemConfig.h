@@ -4,11 +4,11 @@
 // --- Pin mapping ---
 namespace Config{
     // --- Relay ---
-    constexpr gpio_num_t PIN_HEATER = GPIO_NUM_14;
-    constexpr gpio_num_t PIN_STIRRER = GPIO_NUM_13;
-    constexpr gpio_num_t PIN_LIGHT = GPIO_NUM_12;
+    constexpr gpio_num_t PIN_HEATER       = GPIO_NUM_14;
+    constexpr gpio_num_t PIN_STIRRER      = GPIO_NUM_13;
+    constexpr gpio_num_t PIN_LIGHT        = GPIO_NUM_12;
     
-    constexpr gpio_num_t PIN_STATUS_LED = GPIO_NUM_33;
+    constexpr gpio_num_t PIN_STATUS_LED   = GPIO_NUM_33;
 
     constexpr gpio_num_t PIN_ONEWIRE      = GPIO_NUM_32;
     constexpr gpio_num_t PIN_TDS          = GPIO_NUM_35;
