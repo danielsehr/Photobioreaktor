@@ -1,5 +1,6 @@
 #include "control/ControlManager.h"
 #include "config/SystemConfig.h"
+#include <iostream>
 
 void ControlManager::update(
     const SensorData& data,
@@ -22,7 +23,7 @@ void ControlManager::controlTemperature(const SensorData& data, const SystemSett
     {
         if (data.temperature < settings.minTemp)
         {
-            digitalWrite(Config::PIN_HEATER,HIGH);
+            digitalWrite(Config::PIN_HEATER, HIGH);
         }
         else if (data.temperature > settings.maxTemp)
         {
@@ -35,23 +36,34 @@ void ControlManager::controlTemperature(const SensorData& data, const SystemSett
     }
 }
 
+
 void ControlManager::controlStirring(const SystemSettings& settings) {
+    constexpr unsigned long MS_PER_MINUTE = 60UL * 1000UL;
+
+    const unsigned long stirIntervalMs =
+        static_cast<unsigned long>(settings.stirIntervalMinutes) * MS_PER_MINUTE;
+    
+    const unsigned long stirDurationMs =
+        static_cast<unsigned long>(settings.stirDurationMinutes) * MS_PER_MINUTE;
+
     unsigned long now = millis();
 
-    if (!stirringActive && now - lastStirTime >= settings.stirIntervalMinutes)
+
+    if (!stirringActive && now - lastStirTime >= stirIntervalMs)
     {
         stirringActive = true;
         stirStartTime = now;
         digitalWrite(Config::PIN_STIRRER, HIGH);
     }
     
-    if (stirringActive && now - stirStartTime >= settings.stirDurationMinutes)
+    if (stirringActive && now - stirStartTime >= stirDurationMs)
     {
         stirringActive = false;
         lastStirTime = now;
         digitalWrite(Config::PIN_STIRRER, LOW);        
     }
 }
+
 
 void ControlManager::controlLight(const SystemSettings& settings) {
     int hour = 0; // later from RTC
