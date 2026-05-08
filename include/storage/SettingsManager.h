@@ -7,6 +7,7 @@ class SettingsManager {
         bool begin();
         bool load(SystemSettings& settings);
         bool save(const SystemSettings& settings);
+        bool reset(SystemSettings& settings);
 
     private:
         Preferences preferences;
