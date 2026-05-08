@@ -62,6 +62,7 @@ void setup()
   Serial.println("System initialized");
 }
 
+
 void loop() 
 {
   const unsigned long now = millis();
