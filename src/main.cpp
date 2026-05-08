@@ -53,6 +53,7 @@ void setup()
   initializePins();
 
   settingsManager.begin();
+  settingsManager.reset(settings);
   settingsManager.load(settings);
 
   storageManager.begin();
