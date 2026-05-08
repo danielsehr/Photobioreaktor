@@ -11,6 +11,7 @@ class ControlManager {
         void controlStirring(const SystemSettings& settings);
         void controlLight(const SystemSettings& settings);
 
+        bool heaterActive = false;
         bool stirringActive = false;
         unsigned long stirStartTime = 0;
         unsigned long lastStirTime = 0;

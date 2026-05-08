@@ -14,32 +14,50 @@ void ControlManager::update(
 }
 
 
-void ControlManager::controlTemperature(const SensorData& data, const SystemSettings& settings) 
-{
-    bool waterOk = data.waterLevel > 50;
-    bool tempValid = data.temperature > 0;
+void ControlManager::controlTemperature(const SensorData& data, const SystemSettings& settings) {
+    const bool waterOk  = data.waterLevel > 50;
+    const bool tempValid = data.temperature > 0;
 
-    if (waterOk && tempValid) 
+    bool shouldHeat = false;
+
+    if (waterOk && tempValid)
     {
-        std::cout << "data.temp" << data.temperature << "\n";
-        std::cout << "min.temp" << settings.minTemp << "\n";
-
         if (data.temperature < settings.minTemp)
         {
-            std::cout << "ControlManager: Start heating, below MinTemp!\n";
-            digitalWrite(Config::PIN_HEATER, HIGH);
+            shouldHeat = true;
         }
         else if (data.temperature > settings.maxTemp)
         {
-            std::cout << "ControlManager: Stop heating, MaxTemp reached!\n";
-            digitalWrite(Config::PIN_HEATER, LOW);
+            shouldHeat = false;
+        }
+        else
+        {
+            shouldHeat = heaterActive;
         }
     }
     else
     {
-        std::cout << "ControlManager: Water level or Temperature invalid\n" 
-                  << "ControlManager: Set heater pin low!\n";
-        digitalWrite(Config::PIN_HEATER, LOW);
+        std::cout << "ControlManager: Invalid water level or temperature!\n";
+        shouldHeat = false;
+    }
+
+    
+    if (shouldHeat != heaterActive)
+    {
+        heaterActive = shouldHeat;
+
+        digitalWrite(
+            Config::PIN_HEATER,
+            heaterActive ? HIGH : LOW);
+
+        if (heaterActive)
+        {
+            std::cout << "ControlManager: Heater ON\n";
+        }
+        else
+        {
+            std::cout << "ControlManager: Heater OFF\n";
+        }
     }
 }
 
