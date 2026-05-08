@@ -13,11 +13,11 @@ struct SensorData {
 
 struct SystemSettings {
     int maxTemp = 30;
-    int minTemp = 20;
-    int stirIntervalMinutes = 30;
+    int minTemp = 30;
+    int stirIntervalMinutes = 1;
     int stirDurationMinutes = 1;
     int lightOnHour = 8;
-    int lightOffHour = 20;
+    int lightOffHour = 24;
     int measurementIntervalSeconds = 1;
 };
 
