@@ -90,26 +90,30 @@ void loop()
 
 
   // Log update
-   if (now - lastLogUpdate >= LOG_INTERVAL_MS)
-   {
-    lastLogUpdate = now;
+  if (now - lastLogUpdate >= LOG_INTERVAL_MS)
+  {
+  lastLogUpdate = now;
 
-    const auto& data = sensorManager.getData();
+  const auto& data = sensorManager.getData();
+  
+  rtcManager.update();
+  const char* date = rtcManager.getDate();
+  const char* time = rtcManager.getTime();
 
-    rtcManager.update();
+  storageManager.appendMeasurement(
+    data,
+    date,
+    time
+  );
 
-    storageManager.appendMeasurement(
-      data,
-      rtcManager.getDate(),
-      rtcManager.getTime()
-    );
-
-    Serial.printf(
-      "T=%.2f Cond=%.2f Turb=%.2f Level=%d\n",
-      data.temperature,
-      data.conductivity,
-      data.turbidity,
-      data.waterLevel
-    );
-   }
+  Serial.printf(
+    "[%s %s] T=%.2f°C Cond=%.2f Turb=%.2f Level=%d\n",
+    date,
+    time,
+    data.temperature,
+    data.conductivity,
+    data.turbidity,
+    data.waterLevel
+  );
+  }
 }

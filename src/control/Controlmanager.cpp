@@ -5,12 +5,12 @@
 void ControlManager::update(
     const SensorData& data,
     const SystemSettings& settings,
-    int currenHour
+    int currentHour
     )
 {
     controlTemperature(data, settings);
     controlStirring(settings);
-    controlLight(settings);
+    controlLight(settings, currentHour);
 }
 
 
@@ -73,33 +73,74 @@ void ControlManager::controlStirring(const SystemSettings& settings) {
 
     unsigned long now = millis();
 
+    bool shouldStir = stirringActive;
 
     if (!stirringActive && now - lastStirTime >= stirIntervalMs)
     {
-        stirringActive = true;
+        shouldStir = true;
         stirStartTime = now;
-        digitalWrite(Config::PIN_STIRRER, HIGH);
+        
     }
     
     if (stirringActive && now - stirStartTime >= stirDurationMs)
     {
-        stirringActive = false;
+        shouldStir = false;
         lastStirTime = now;
-        digitalWrite(Config::PIN_STIRRER, LOW);        
+    }
+
+
+    if (shouldStir != stirringActive) 
+    {
+        stirringActive = shouldStir;
+
+        digitalWrite(
+            Config::PIN_STIRRER,
+            stirringActive ? HIGH : LOW
+        );
+        
+        if (stirringActive)
+        {
+            std::cout << "ControlManager: Stirring ON\n";
+        }
+        else
+        {
+            std::cout << "ControlManager: Stirring OFF\n";
+        }
     }
 }
 
 
-void ControlManager::controlLight(const SystemSettings& settings) {
-    int hour = 0; // later from RTC
+void ControlManager::controlLight(const SystemSettings& settings, int currentHour) {
 
-    if (hour >= settings.lightOnHour && hour < settings.lightOffHour)
+    bool shouldLight = lightActive;
+
+    if (currentHour >= settings.lightOnHour && currentHour < settings.lightOffHour)
     {
-        digitalWrite(Config::PIN_LIGHT, HIGH);
+        shouldLight = true;
+        // digitalWrite(Config::PIN_LIGHT, HIGH);
     }
     else 
     {
-        digitalWrite(Config::PIN_LIGHT, LOW);
+        shouldLight = false;
+        // digitalWrite(Config::PIN_LIGHT, LOW);
+    } 
+
+    if (shouldLight != lightActive) 
+    {
+        lightActive = shouldLight;
+
+        digitalWrite(
+            Config::PIN_LIGHT,
+            lightActive ? HIGH : LOW
+        );
+        
+        if (lightActive)
+        {
+            std::cout << "ControlManager: Light ON\n";
+        }
+        else
+        {
+            std::cout << "ControlManager: Light OFF\n";
+        }
     }
-    
 }
