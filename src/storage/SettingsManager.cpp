@@ -1,9 +1,11 @@
 // #pragma once
 #include "storage/SettingsManager.h"
 
+
 bool SettingsManager::begin() {
     return preferences.begin(NAMESPACE_NAME, false);
 }
+
 
 bool SettingsManager::load(SystemSettings& settings) {
     settings.maxTemp = preferences.getInt("MaxTemp", DEFAULT_SETTINGS.maxTemp);
@@ -17,6 +19,7 @@ bool SettingsManager::load(SystemSettings& settings) {
     return true;
 }
 
+
 bool SettingsManager::save(const SystemSettings& settings) {
     preferences.putInt("MaxTemp", settings.maxTemp);
     preferences.putInt("MinTemp", settings.minTemp);
@@ -27,4 +30,13 @@ bool SettingsManager::save(const SystemSettings& settings) {
     preferences.putInt("MeasInt", settings.measurementIntervalSeconds);
 
     return true;
+}
+
+
+bool SettingsManager::reset(SystemSettings& settings) {
+    preferences.clear();
+    
+    settings = DEFAULT_SETTINGS;
+    
+    return save(settings);
 }
