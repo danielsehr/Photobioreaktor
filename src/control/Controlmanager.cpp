@@ -1,6 +1,6 @@
+#include <iostream>
 #include "control/ControlManager.h"
 #include "config/SystemConfig.h"
-#include <iostream>
 
 void ControlManager::update(
     const SensorData& data,
@@ -21,17 +21,24 @@ void ControlManager::controlTemperature(const SensorData& data, const SystemSett
 
     if (waterOk && tempValid) 
     {
+        std::cout << "data.temp" << data.temperature << "\n";
+        std::cout << "min.temp" << settings.minTemp << "\n";
+
         if (data.temperature < settings.minTemp)
         {
+            std::cout << "ControlManager: Start heating, below MinTemp!\n";
             digitalWrite(Config::PIN_HEATER, HIGH);
         }
         else if (data.temperature > settings.maxTemp)
         {
+            std::cout << "ControlManager: Stop heating, MaxTemp reached!\n";
             digitalWrite(Config::PIN_HEATER, LOW);
         }
     }
     else
     {
+        std::cout << "ControlManager: Water level or Temperature invalid\n" 
+                  << "ControlManager: Set heater pin low!\n";
         digitalWrite(Config::PIN_HEATER, LOW);
     }
 }
