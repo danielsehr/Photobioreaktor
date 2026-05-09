@@ -1,0 +1,436 @@
+<!DOCTYPE HTML>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photobioreaktor AsyncWebServer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="chart.umd.js"></script>
+
+    <!-- hammer.min.js has to come BEFORE chartjs-plugin-zoom.min.js -->
+    <script src="hammer.min.js"></script>
+    <script src="chartjs-plugin-zoom.min.js"></script>
+    <script src="date-fns.js"></script>
+    <script src="chartjs-adapter-date-fns.umd.js"></script>
+</head>
+
+<body>
+    <!-- TOP NAV -->
+    <div class="topnav">
+        <h1>Photobioreaktor</h1>
+    </div>
+
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+
+        <!-- LEFT CONTAINER -->
+        <div class="left-container">
+
+            <!-- SET PARAM -->
+            <div class="settings">
+                <h2>Einstellungen</h2>
+                <form class="form-grid" id="form-grid" action="/get">
+
+                    <label for="MaxTempField">Maximale Temperatur (°C):</label>
+                    <input type="number" id="MaxTempField" name="Maximale Temperatur">
+
+                    <label for="MinTempField">Minimale Temperatur (°C):</label>
+                    <input type="number" id="MinTempField" name="Minimale Temperatur">
+
+                    <label for="StirrIntField">Rührintervall (min):</label>
+                    <input type="number" id="StirrIntField" name="Rührintervall">
+
+                    <label for="StirrDurField">Rührdauer (min):</label>
+                    <input type="number" id="StirrDurField" name="Rührdauer">
+
+                    <label for="LightOnField">Beleuchtung an:</label>
+                    <input type="number" id="LightOnField" name="Beleuchtung an">
+
+                    <label for="LightOffField">Beleuchtung aus:</label>
+                    <input type="number" id="LightOffField" name="Beleuchtung aus">
+
+                    <label for="dateField">Datum:</label>
+                    <input type="date" id="dateField">
+
+                    <label for="timeField">Uhrzeit:</label>
+                    <input type="time" id="timeField" step="1">
+
+                    <label for="MeasIntField">Messintervall (s):</label>
+                    <input type="number" id="MeasIntField" name="Speicherintervall">
+                </form>
+                <!-- Save Button -->
+                <div class="settings-button-container">
+                    <button id="saveButton">Einstellungen speichern</button>
+                </div>
+            </div>
+
+            <!-- DATA DOWNLOAD -->
+            <div class="download-container">
+                <h2>Download</h2>
+                <div class="download-button-container">
+                    <button id="downloadButton" onclick="downloadCSV()">Download CSV</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- RIGHT CONTAINER -->
+        <div class="right-container">
+            <div class="chart-container">
+
+                <!-- Time Range -->
+                <div class="timerange-container">
+                    <label for="timeRange">Zeitraum:</label>
+                    <select id="timeRange">
+                        <option value="today">Heute</option>
+                        <option value="yesterday">Gestern</option>
+                        <option value="7days">Letzte 7 Tage</option>
+                        <option value="30days">Letzte 30 Tage</option>
+                        <option value="all">Alles</option>
+                    </select>
+                    <div class="button-container">
+                        <button id="filterButton">Zeitraum anzeigen</button>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="chart">
+                    <canvas id="sensorChart"></canvas>
+                </div>
+
+                <!-- Chart Buttons -->
+                <div class="chart-button-container">
+                    <button onclick="sensorChart.resetZoom()">Reset Zoom</button>
+
+                    <p>
+                        <span class="label">Messintervall:</span><span id="intervalField">--</span> <span
+                            class="unit">s</span>
+                    </p>
+                    <!-- <button onclick="pauseChart()">Pause</button>
+                    <button onclick="stopChart()">Stopp</button>
+                    <button onclick="resetChart()">Werte löschen</button> -->
+                </div>
+            </div>
+
+
+            <!-- LIVE VALUES -->
+            <div class="values">
+                <div class="header-values">
+                    <h2>Live-Werte</h2>
+                </div>
+                <div class="sensor-values">
+                    <div class="value-box">
+                        <p>
+                            <span class="label">Zeitstempel:</span> <span id="espTimeField">--</span> <span
+                                class="unit">s</span>
+                        </p>
+                    </div>
+                    <div class="value-box">
+                        <p><span class="label">Temperatur:</span> <span id="tempField">--</span> <span
+                                class="unit">°C</span></p>
+                    </div>
+                    <div class="value-box">
+                        <p><span class="label">Leitfähigkeit:</span> <span id="condField">--</span> <span
+                                class="unit">ppm</span></p>
+                    </div>
+                    <div class="value-box">
+                        <p><span class="label">TDS:</span> <span id="turbField">--</span> <span class="unit">g/L</span>
+                        </p>
+                    </div>
+                    <div class="value-box">
+                        <p><span class="label">Füllvolumen</span><span id="levelField">--</span> <span
+                                class="unit">%</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark Mode  -->
+    <div class="bottom-nav">
+        <div class="dark-mode">
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
+            <span>Dark Mode</span>
+        </div>
+    </div>
+
+
+
+
+    <!-- SCRIPT -->
+    <script>
+        // Download CSV
+        function downloadCSV() {
+            // window.location.href = "/download";
+            // document.getElementById("filterButton").addEventListener("click", () => {
+                let range = document.getElementById("timeRange").value;
+
+                // Einfacher Download: CSV gefiltert ziehen
+                window.location.href = `/download?range=${range}`;
+            // });
+            }
+        
+
+
+        // Load settings from Pref
+        async function loadSettings() {
+            try {
+                let response = await fetch("/settings.json");
+                if (!response.ok) throw new Error("HTTP-Fehler " + response.status);
+                let data = await response.json();
+
+                document.getElementById("MaxTempField").value = data.MaxTemp;
+                document.getElementById("MinTempField").value = data.MinTemp;
+                document.getElementById("StirrIntField").value = data.StirrInt;
+                document.getElementById("StirrDurField").value = data.StirrDur;
+                document.getElementById("LightOnField").value = data.LightOn;
+                document.getElementById("LightOffField").value = data.LightOff;
+                document.getElementById("dateField").value = data.Date;
+                document.getElementById("timeField").value = data.Time;
+                document.getElementById("MeasIntField").value = data.MeasInt;
+            } catch (err) {
+                console.error("Fehler beim Laden der Settings:", err);
+            }
+        }
+
+
+        // Set settings
+        let timerId = null;
+        let measureInterval = 5000; // default 5s#
+
+        function startUpdateInterval() {
+            if (timerId) clearInterval(timerId);
+            timerId = setInterval(updateData, measureInterval);
+        }
+
+        document.getElementById("saveButton").addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            await fetch("/save.json", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    MaxTemp: document.getElementById("MaxTempField").value,
+                    MinTemp: document.getElementById("MinTempField").value,
+                    StirrInt: document.getElementById("StirrIntField").value,
+                    StirrDur: document.getElementById("StirrDurField").value,
+                    LightOn: document.getElementById("LightOnField").value,
+                    LightOff: document.getElementById("LightOffField").value,
+                    Date: document.getElementById("dateField").value,
+                    Time: document.getElementById("timeField").value,
+                    MeasInt: document.getElementById("MeasIntField").value
+                })
+            });
+
+            // Neues Intervall auslesen und in ms umrechnen
+            measureInterval = parseInt(document.getElementById("MeasIntField").value) * 1000;
+
+            // Timer neu starten
+            startUpdateInterval();
+
+            // Intervall-Feld aktualisieren
+            document.getElementById("intervalField").textContent = measureInterval / 1000;
+
+            alert("Einstellungen gespeichert!");
+        });
+
+
+
+        //--  CHART --//
+        // Chart itself
+        Chart.register(ChartZoom);
+        const ctx = document.getElementById('sensorChart').getContext('2d');
+        
+        // Data
+        var data = {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Temperatur (°C)',
+                    data: [],
+                    borderWidth: 1
+                },
+                {
+                    label: 'Leitfähigkeit (ppm)',
+                    data: [],
+                    borderWidth: 1
+                },
+                {
+                    label: 'Füllstand (cm)',
+                    data: [],
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        // Scales
+        const scales = {
+            x: {
+                position: 'bottom',
+                // type: 'time',
+                ticks: {
+                    autoSkip: true,
+                    autoSkipPadding: 50,
+                    maxRotation: 0,
+                },
+                // time: {
+                //     displayFormats: {
+                //         hour: 'HH:mm',
+                //         minute: 'HH:mm',
+                //         second: 'HH:mm:ss'
+                //     }
+                // }
+            },
+            y: {
+                position: 'left',
+                ticks: {
+                    callback: (val, index, ticks) => index === 0 || index === ticks.length - 1 ? null : val,
+                },
+                grid: {
+                    borderColor: 'rgba(0,0,0,0.5)',
+                    color: 'rgba(0,0,0,0.1)',
+                },
+                title: {
+                    display: true,
+                    // text: (ctx) => ctx.scale.axis + ' axis',
+                    text: 'Messwert'
+                }
+            },
+        };
+
+        // Zoom
+        const zoomOptions = {
+            pan: {
+                enabled: true,
+                mode: 'xy',
+                modifierKey: 'ctrl',
+            },
+            zoom: {
+                wheel: { enabled: true }, mode: 'xy',
+                pinch: { enabled: true }, mode: 'xy', scaleMode: 'xy',
+                drag: {
+                    enabled: true,
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1,
+                    backgroundColor: 'rgba(54, 162, 235, 0.3)'
+                }
+            }
+        }
+
+        const panStatus = () => zoomOptions.pan.enabled ? 'enabled' : 'disabled';
+        const zoomStatus = () => zoomOptions.zoom.wheel.enabled ? 'enabled' : 'disabled';
+
+
+        // Chart
+        var sensorChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                // responsive: true,
+                scales: scales,
+                plugins: {
+                    zoom: zoomOptions,
+                    title: {
+                        display: true,
+                        position: 'bottom',
+                        text: [
+                            'Zoom: ' + zoomStatus() + ', Pan: ' + panStatus(),
+                            'Drücke "Strg" um im Diagramm zu ziehen'
+                        ]
+                    },
+                    legend: {
+                        position: 'top',
+                    },
+                },
+            }
+        });
+
+        // Selecte Chart Range
+        document.getElementById("filterButton").addEventListener("click", () => {
+            let range = document.getElementById("timeRange").value;
+
+            fetch(`/filter.json?range=${range}`)
+                .then(r => r.json())
+                .then(d => {
+                    console.log("Gefilterte Daten:", d);
+                });
+        });
+
+
+        // Chart gleichzeitig mit updateData aktualisieren
+        function updateData() {
+            fetch('/data.json', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    espTime: 'espTime',
+                    curDateTime: 'curDateTime',
+                    temp: 'temp',
+                    cond: 'cond',
+                    turb: 'turb',
+                    level: 'level'
+                })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    // document.getElementById('espTimeField').textContent = d.espTime ?? "--";
+                    // document.getElementById('tempField').textContent =
+                    //     (d.temp != null && !isNaN(d.temp)) ? parseFloat(d.temp).toFixed(2) : "--";
+                    // document.getElementById('condField').textContent =
+                    //     (d.cond != null && !isNaN(d.cond)) ? parseFloat(d.cond).toFixed(2) : "--";
+                    // document.getElementById('turbField').textContent =
+                    //     (d.turb != null && !isNaN(d.turb)) ? parseFloat(d.turb).toFixed(2) : "--";
+                    // document.getElementById('levelField').textContent =
+                    //     (d.level != null && !isNaN(d.level)) ? d.level : "--";
+
+
+                    // Update live values
+                    document.getElementById('espTimeField').textContent = d.espTime;
+                    document.getElementById('tempField').textContent = parseFloat(d.temp).toFixed(2);
+                    document.getElementById('condField').textContent = parseFloat(d.cond).toFixed(2);
+                    document.getElementById('turbField').textContent = parseFloat(d.turb).toFixed(2);
+                    document.getElementById('levelField').textContent = d.level;
+
+
+                    // Update Chart
+                    sensorChart.data.labels.push(d.curDateTime);
+
+                    let temp = parseFloat(d.temp);
+                    let cond = parseFloat(d.cond);
+                    let level = parseFloat(d.level);
+
+                    sensorChart.data.datasets[0].data.push(temp);
+                    sensorChart.data.datasets[1].data.push(cond);
+                    sensorChart.data.datasets[2].data.push(level);
+
+                    sensorChart.update();
+                });
+        }
+
+
+        loadSettings().then(() => {
+            updateData();              // loads it directly
+            startUpdateInterval();     // Starts timer for interval setting
+            document.getElementById("intervalField").textContent = measureInterval / 1000;
+        });
+
+
+
+        //-- DARK MODE --//
+        const toggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        toggle.addEventListener('change', () => {
+            body.classList.toggle('dark-mode');
+        });
+
+    </script>
+</body>
+
+</html>
