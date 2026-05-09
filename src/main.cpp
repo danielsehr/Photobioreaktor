@@ -3,7 +3,7 @@
 #include "core/SystemTypes.h"
 
 #include "sensors/SensorManager.h"
-#include "storage/SettingsManager.h"
+#include "settings/SettingsManager.h"
 #include "storage/StorageMananger.h"
 #include "control/ControlManager.h"
 #include "time/RTCManager.h"
