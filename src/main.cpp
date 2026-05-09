@@ -7,16 +7,24 @@
 #include "storage/StorageMananger.h"
 #include "control/ControlManager.h"
 #include "time/RTCManager.h"
+#include "network/NetworkManager.h"
+#include "web/WebServerManager.h"
 
 
 // Instantiate manager and settings
-SystemSettings settings;
-
 SensorManager sensorManager;
 SettingsManager settingsManager;
 StorageManager storageManager;
 ControlManager controlManager;
 RTCManager rtcManager;
+NetworkManager networkManager;
+
+WebServerManager webServerManager(
+  settingsManager,
+  sensorManager,
+  storageManager, 
+  rtcManager
+);
 
 
 // Define timers and intervals
@@ -26,7 +34,7 @@ unsigned long lastLogUpdate = 0;
 
 constexpr unsigned long SENSOR_INTERVAL_MS = 1000;
 constexpr unsigned long CONTROL_INTERVAL_MS = 1000;
-constexpr unsigned long LOG_INTERVAL_MS = 1000;
+constexpr unsigned long LOG_INTERVAL_MS = 5000;
 
 
 // Functions
@@ -53,12 +61,11 @@ void setup()
   initializePins();
 
   settingsManager.begin();
-  settingsManager.reset(settings);
-  settingsManager.load(settings);
-
   storageManager.begin();
   sensorManager.begin();
   rtcManager.begin();
+  networkManager.begin();
+  webServerManager.begin();
 
   Serial.println("System initialized");
 }
@@ -83,7 +90,7 @@ void loop()
 
     controlManager.update(
       sensorManager.getData(),
-      settings,
+      settingsManager.getSettings(),
       rtcManager.getHour()
     );
   }
