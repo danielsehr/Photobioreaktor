@@ -3,12 +3,17 @@
 
 
 bool SettingsManager::begin() {
-    return preferences.begin(NAMESPACE_NAME, false);
+    reset();
+    load();
+
+    return true;
 }
 
 
-bool SettingsManager::load(SystemSettings& settings) {
-    settings.maxTemp = preferences.getInt("MaxTemp", DEFAULT_SETTINGS.maxTemp);
+bool SettingsManager::load() {
+    preferences.begin("settings", true);
+
+    settings.maxTemp = preferences.getInt("MaxTemp", DEFAULT_SETTINGS.maxTemp );
     settings.minTemp = preferences.getInt("MinTemp", DEFAULT_SETTINGS.minTemp);
     settings.stirIntervalMinutes = preferences.getInt("StirrInt", DEFAULT_SETTINGS.stirIntervalMinutes);
     settings.stirDurationMinutes = preferences.getInt("StirrDur", DEFAULT_SETTINGS.stirDurationMinutes);
@@ -16,11 +21,17 @@ bool SettingsManager::load(SystemSettings& settings) {
     settings.lightOffHour = preferences.getInt("LightOff", DEFAULT_SETTINGS.lightOffHour);
     settings.measurementIntervalSeconds = preferences.getInt("MeasInt", DEFAULT_SETTINGS.measurementIntervalSeconds);
 
+    preferences.end();
+    
     return true;
 }
 
 
-bool SettingsManager::save(const SystemSettings& settings) {
+bool SettingsManager::save(const SystemSettings& newSettings) {
+    settings = newSettings;
+
+    preferences.begin("settings", false);
+
     preferences.putInt("MaxTemp", settings.maxTemp);
     preferences.putInt("MinTemp", settings.minTemp);
     preferences.putInt("StirrInt", settings.stirIntervalMinutes);
@@ -29,12 +40,21 @@ bool SettingsManager::save(const SystemSettings& settings) {
     preferences.putInt("LightOff", settings.lightOffHour);
     preferences.putInt("MeasInt", settings.measurementIntervalSeconds);
 
+    preferences.end();
+
     return true;
 }
 
 
-bool SettingsManager::reset(SystemSettings& settings) {
+const SystemSettings& SettingsManager::getSettings() const{
+    return settings;
+}
+
+
+bool SettingsManager::reset() {
+    preferences.begin("settings", false);
     preferences.clear();
+    preferences.end();
     
     settings = DEFAULT_SETTINGS;
     
