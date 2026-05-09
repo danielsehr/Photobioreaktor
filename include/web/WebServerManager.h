@@ -2,7 +2,8 @@
 
 #include <ESPAsyncWebServer.h>
 
-#include "storage/SettingsManager.h"
+#include "core/SystemTypes.h"
+#include "settings/SettingsManager.h"
 #include "sensors/SensorManager.h"
 #include "storage/StorageMananger.h"
 #include "time/RTCManager.h"
@@ -12,8 +13,8 @@ class WebServerManager
 public:
     WebServerManager(
         SettingsManager& settingsManager,
-        SensorManager& SensorManager,
-        StorageManager& StorageManager,
+        SensorManager& sensorManager,
+        StorageManager& storageManager,
         RTCManager& rtcManager
     );
 
@@ -21,10 +22,10 @@ public:
 
 private:
     AsyncWebServer server{80};
-
+    
     SettingsManager& settingsManager;
-    SensorManager& SensorManager;
-    StorageManager& StorageManager;
+    SensorManager& sensorManager;
+    StorageManager& storageManager;
     RTCManager& rtcManager;
 
     void setupRoutes();
