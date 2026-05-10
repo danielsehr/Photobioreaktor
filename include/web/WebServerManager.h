@@ -7,6 +7,8 @@
 #include "sensors/SensorManager.h"
 #include "storage/StorageMananger.h"
 #include "time/RTCManager.h"
+#include "web/WebSocketManager.h"
+
 
 class WebServerManager 
 {
@@ -16,7 +18,8 @@ public:
         SettingsManager& settingsManager,
         SensorManager& sensorManager,
         StorageManager& storageManager,
-        RTCManager& rtcManager
+        RTCManager& rtcManager,
+        WebSocketManager& webSocketManager
     );
 
     void begin();
@@ -29,15 +32,7 @@ private:
     SensorManager& sensorManager;
     StorageManager& storageManager;
     RTCManager& rtcManager;
+    WebSocketManager& webSocketManager;
 
     void setupRoutes();
-
-    void handleSettingsGet(AsyncWebServerRequest* request);
-    void handleSettingsPost(AsyncWebServerRequest* request,
-                            uint8_t* data,
-                            size_t len);
-
-    void handleSensorData(AsyncWebServerRequest* request);
-    
-    void handleCsvDownload(AsyncWebServerRequest* request);
 };

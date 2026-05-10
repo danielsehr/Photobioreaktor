@@ -8,6 +8,7 @@
 #include "control/ControlManager.h"
 #include "time/RTCManager.h"
 #include "network/NetworkManager.h"
+#include "web/WebSocketManager.h"
 #include "web/WebServerManager.h"
 
 
@@ -19,11 +20,14 @@ ControlManager controlManager;
 RTCManager rtcManager;
 NetworkManager networkManager;
 
+WebSocketManager webSocketManager(sensorManager);
+
 WebServerManager webServerManager(
   settingsManager,
   sensorManager,
   storageManager, 
-  rtcManager
+  rtcManager,
+  webSocketManager
 );
 
 
@@ -106,13 +110,19 @@ void loop()
   rtcManager.update();
   const char* date = rtcManager.getDate();
   const char* time = rtcManager.getTime();
-
+  
+  // Store data to CSV
   storageManager.appendMeasurement(
     data,
     date,
     time
   );
 
+  
+  // Websocket
+  webSocketManager.broadcastSensorData();
+
+  // Print data in console
   Serial.printf(
     "[%s %s] T=%.2f°C Cond=%.2f Turb=%.2f Level=%d\n",
     date,
