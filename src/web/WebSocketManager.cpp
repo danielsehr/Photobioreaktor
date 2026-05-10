@@ -1,7 +1,10 @@
 #include "web/WebSocketManager.h"
 
+// Constructor 
 WebSocketManager::WebSocketManager(SensorManager& sensorMgr)
-    : sensorManager(sensorMgr), ws("/ws") {}
+    : sensorManager(sensorMgr), 
+      ws("/ws") 
+      {}
 
 
 void WebSocketManager::begin(AsyncWebServer& server)
@@ -14,7 +17,7 @@ void WebSocketManager::begin(AsyncWebServer& server)
                       size_t len)
     {
         if (type == WS_EVT_CONNECT) {
-            // optional: send initial state
+            // Initial sensor values send
             broadcastSensorData();
         }
     });
@@ -37,5 +40,6 @@ void WebSocketManager::broadcastSensorData()
     String json;
     serializeJson(doc, json);
 
+    // Send json as text websocket message to all connected clients
     ws.textAll(json);
 }

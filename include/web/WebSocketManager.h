@@ -8,12 +8,10 @@ public:
     WebSocketManager(SensorManager& sensorMgr);
 
     void begin(AsyncWebServer& server);
-    void loop(); // optional
-
     void broadcastSensorData();
 
 private:
+    // Member variables
     SensorManager& sensorManager;
-
     AsyncWebSocket ws;
 };
