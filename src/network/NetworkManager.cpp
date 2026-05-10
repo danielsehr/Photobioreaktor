@@ -16,7 +16,7 @@ void NetworkManager::begin()
 
     if (!success)
     {
-        Serial.println("SpftAP start failed!");
+        Serial.println("SoftAP start failed!");
         return;
     }
 
