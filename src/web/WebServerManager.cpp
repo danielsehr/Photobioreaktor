@@ -16,8 +16,7 @@ WebServerManager::WebServerManager(
       storageManager(storageMgr),
       rtcManager(rtcMgr),
       webSocketManager(webSocketMgr) 
-{
-}
+    {}
 
 
 void WebServerManager::begin(){
