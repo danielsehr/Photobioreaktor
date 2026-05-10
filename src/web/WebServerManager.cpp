@@ -4,16 +4,16 @@
 #include <LittleFS.h>
 
 
+// Creates construct. parameters, binds them to adress reference i pass in
 WebServerManager::WebServerManager(
-
     SettingsManager& settingsMgr,
     SensorManager& sensorMgr,
     StorageManager& storageMgr,
     RTCManager& rtcMgr)
     : settingsManager(settingsMgr),
-    sensorManager(sensorMgr),
-    storageManager(storageMgr),
-    rtcManager(rtcMgr) 
+      sensorManager(sensorMgr),
+      storageManager(storageMgr),
+      rtcManager(rtcMgr) 
 {
 }
 
