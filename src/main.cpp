@@ -75,7 +75,7 @@ void loop()
 {
   const unsigned long now = millis();
 
-  // Sensor update
+  // SENSOR UPDATE INTERVAL
   if (now - lastSensorUpdate >= SENSOR_INTERVAL_MS)
   {
     lastSensorUpdate = now;
@@ -83,7 +83,7 @@ void loop()
   }
 
 
-  // Control intervall
+  // CONTROL INTERVAL
   if (now - lastControlUpdate >= CONTROL_INTERVAL_MS)
   {
     lastControlUpdate = now;
@@ -96,7 +96,7 @@ void loop()
   }
 
 
-  // Log update
+  // LOG UPDATE INTERVAL
   if (now - lastLogUpdate >= LOG_INTERVAL_MS)
   {
   lastLogUpdate = now;

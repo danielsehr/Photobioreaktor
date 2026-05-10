@@ -39,10 +39,10 @@ void WebServerManager::setupRoutes()
 
     server.serveStatic("/", LittleFS, "/");
 
-    server.on("/settings.json", HTTP_GET, [this](AsyncWebServerRequest* request)
-    {
-        handleSettingsGet(request);
-    });
+    // server.on("/settings.json", HTTP_GET, [this](AsyncWebServerRequest* request)
+    // {
+    //     handleSettingsGet(request);
+    // });
 
 
     server.on("/data.json", HTTP_GET, [this](AsyncWebServerRequest* request)
@@ -50,32 +50,32 @@ void WebServerManager::setupRoutes()
         handleSensorData(request);
     });
 
-    server.on("/download", HTTP_GET, [this](AsyncWebServerRequest* request)
-    {
-        handleCsvDownload(request);
-    });
+    // server.on("/download", HTTP_GET, [this](AsyncWebServerRequest* request)
+    // {
+    //     handleCsvDownload(request);
+    // });
 }
 
 
-void WebServerManager::handleSettingsGet(AsyncWebServerRequest* request)
-{
-    JsonDocument doc;
+// void WebServerManager::handleSettingsGet(AsyncWebServerRequest* request)
+// {
+//     JsonDocument doc;
 
-    const auto& settings = settingsManager.getSettings();
+//     const auto& settings = settingsManager.getSettings();
     
-    doc["maxTemp"] = settings.maxTemp;
-    doc["minTemp"] = settings.minTemp;
-    doc["stirInterval"] = settings.stirIntervalMinutes;
-    doc["stirDuration"] = settings.stirDurationMinutes;
-    doc["lightOn"] = settings.lightOnHour;
-    doc["lightOff"] = settings.lightOffHour;
-    doc["measurementInterval"] = settings.measurementIntervalSeconds;
+//     doc["maxTemp"] = settings.maxTemp;
+//     doc["minTemp"] = settings.minTemp;
+//     doc["stirInterval"] = settings.stirIntervalMinutes;
+//     doc["stirDuration"] = settings.stirDurationMinutes;
+//     doc["lightOn"] = settings.lightOnHour;
+//     doc["lightOff"] = settings.lightOffHour;
+//     doc["measurementInterval"] = settings.measurementIntervalSeconds;
 
-    String json;
-    serializeJson(doc, json);
+//     String json;
+//     serializeJson(doc, json);
 
-    request->send(200, "application/json", json);
-}
+//     request->send(200, "application/json", json);
+// }
 
 
 void WebServerManager::handleSensorData(AsyncWebServerRequest* request)
@@ -97,12 +97,12 @@ void WebServerManager::handleSensorData(AsyncWebServerRequest* request)
 }
 
 
-void WebServerManager::handleCsvDownload(AsyncWebServerRequest* request)
-{
-    request->send(
-        LittleFS,
-        "/data.csv",
-        "text/csv",
-        true
-    );
-}
+// void WebServerManager::handleCsvDownload(AsyncWebServerRequest* request)
+// {
+//     request->send(
+//         LittleFS,
+//         "/data.csv",
+//         "text/csv",
+//         true
+//     );
+// }

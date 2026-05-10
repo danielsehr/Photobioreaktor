@@ -6,7 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photobioreaktor AsyncWebServer</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="js/app.js"></script>    
+    
+    <!-- dependencies -->
+    <!-- hammer.min.js has to come BEFORE chartjs-plugin-zoom.min.js -->
+    <!-- <script src="js/helper/chart.umd.js"></script>
+    <script src="js/helper/hammer.min.js"></script>
+    <script src="js/helper/chartjs-plugin-zoom.min.js"></script>
+    <script src="js/helper/date-fns.js"></script>
+    <script src="js/helper/chartjs-adapter-date-fns.umd.js"></script>
+     -->
+    app
+    <script src="js/main.js"></script>
 </head>
 
 <body>
@@ -154,5 +164,31 @@
         </div>
     </div>
 </body>
+
+<!-- <script>
+async function fetchSensorData() {
+    try {
+        const res = await fetch('/data.json', { cache: "no-store" });
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        document.getElementById('espTimeField').textContent = data.uptimeSeconds ?? '--';
+        document.getElementById('tempField').textContent = data.temperature ?? '--';
+        document.getElementById('condField').textContent = data.conductivity ?? '--';
+        document.getElementById('turbField').textContent = data.turbidity ?? '--';
+        document.getElementById('levelField').textContent = data.waterLevel ?? '--';
+
+    } catch (err) {
+        console.error('Failed to fetch sensor data:', err);
+    }
+}
+
+// initial load
+fetchSensorData();
+
+// refresh every 2 seconds
+setInterval(fetchSensorData, 2000);
+</script> -->
 
 </html>
