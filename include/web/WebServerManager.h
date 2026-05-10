@@ -11,6 +11,7 @@
 class WebServerManager 
 {
 public:
+    // Constructor: blueprint how the class is constructed
     WebServerManager(
         SettingsManager& settingsManager,
         SensorManager& sensorManager,
@@ -23,6 +24,7 @@ public:
 private:
     AsyncWebServer server{80};
     
+    // Member variables of the class -> storage location inside object
     SettingsManager& settingsManager;
     SensorManager& sensorManager;
     StorageManager& storageManager;
