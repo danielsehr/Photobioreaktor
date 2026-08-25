@@ -1,12 +1,6 @@
 #include "WebSocketManager.h"
 #include "utils/logger/Logger.h"
 
-// Constructor 
-WebSocketManager::WebSocketManager(SensorManager& sensorMgr)
-    : sensorManager(sensorMgr), 
-      ws("/ws") 
-      {}
-
 
 void WebSocketManager::begin(AsyncWebServer& server)
 {
@@ -28,6 +22,85 @@ void WebSocketManager::begin(AsyncWebServer& server)
     server.addHandler(&webSocket_);
 
     LOG_INFO("Websocket initialized.");
+}
+
+
+void WebSocketManager::onEvent(
+    AsyncWebSocket* server,
+    AsyncWebSocketClient* client,
+    AwsEventType type,
+    void* arg,
+    uint8_t* data,
+    size_t len)
+{
+    switch (type)
+    {
+    case WS_EVT_CONNECT:
+        {
+            LOG_INFO("Client connected.");
+        
+            newClient_ = client;
+            
+            break;
+        }
+
+    case WS_EVT_DISCONNECT:
+        {
+            LOG_INFO("Client disconnected.");
+        
+            if (newClient_ == client)
+                {
+                    newClient_ = nullptr;
+                }
+
+            break;
+        }
+        
+
+    case WS_EVT_DATA:
+    {
+        String message;
+
+        for (size_t i = 0; i < len; i++)
+        {
+            message += static_cast<char>(data[i]);
+        }
+
+        LOG_INFO(message.c_str());
+
+        client->text("Message received.");
+
+        break;
+    }
+
+    default:
+        break;
+    }
+}
+
+void WebSocketManager::broadcast(const char *message)
+{
+    webSocket_.textAll(message);
+}
+
+void WebSocketManager::send(AsyncWebSocketClient& client, const char* message)
+{
+    client.text(message);
+}
+
+bool WebSocketManager::hasNewClient() const 
+{
+    return newClient_ != nullptr;
+}
+
+AsyncWebSocketClient* WebSocketManager::newClient()
+{
+    return newClient_;
+}
+
+void WebSocketManager::clearNewClient()
+{
+    newClient_ = nullptr;
 }
 
 
