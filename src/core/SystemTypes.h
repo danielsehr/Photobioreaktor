@@ -1,16 +1,6 @@
 #pragma once 
 #include <Arduino.h>
 
-
-struct SensorData {
-    unsigned long uptimeSeconds = 0;
-
-    float temperature = NAN;
-    float conductivity = NAN;
-    float turbidity = NAN;
-    int waterLevel = -1;
-};
-
 struct SystemSettings {
     int maxTemp = 30;
     int minTemp = 30;
@@ -22,5 +12,3 @@ struct SystemSettings {
 };
 
 inline constexpr SystemSettings DEFAULT_SETTINGS{};
-
-
