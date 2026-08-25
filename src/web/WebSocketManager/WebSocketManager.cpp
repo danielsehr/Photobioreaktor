@@ -1,4 +1,5 @@
-#include "web/WebSocketManager.h"
+#include "WebSocketManager.h"
+#include "utils/logger/Logger.h"
 
 // Constructor 
 WebSocketManager::WebSocketManager(SensorManager& sensorMgr)
@@ -9,37 +10,41 @@ WebSocketManager::WebSocketManager(SensorManager& sensorMgr)
 
 void WebSocketManager::begin(AsyncWebServer& server)
 {
-    ws.onEvent([this](AsyncWebSocket *server,
-                      AsyncWebSocketClient *client,
-                      AwsEventType type,
-                      void *arg,
-                      uint8_t *data,
-                      size_t len)
-    {
-        if (type == WS_EVT_CONNECT) {
-            // Initial sensor values send
-            broadcastSensorData();
+    webSocket_.onEvent(
+        [this](
+            AsyncWebSocket* server,
+            AsyncWebSocketClient* client,
+            AwsEventType type,
+            void* arg,
+            uint8_t* data,
+            size_t len
+        )
+        {
+            onEvent(server, client, type, arg, data, len);
         }
-    });
 
-    server.addHandler(&ws);
+    );
+
+    server.addHandler(&webSocket_);
+
+    LOG_INFO("Websocket initialized.");
 }
 
 
-void WebSocketManager::broadcastSensorData()
-{
-    const auto& data = sensorManager.getData();
+// void WebSocketManager::broadcastSensorData()
+// {
+//     const auto& data = sensorManager.getData();
 
-    JsonDocument doc;
-    doc["uptimeSeconds"] = data.uptimeSeconds;
-    doc["temperature"] = data.temperature;
-    doc["conductivity"] = data.conductivity;
-    doc["turbidity"] = data.turbidity;
-    doc["waterLevel"] = data.waterLevel;
+//     JsonDocument doc;
+//     doc["uptimeSeconds"] = data.uptimeSeconds;
+//     doc["temperature"] = data.temperature;
+//     doc["conductivity"] = data.conductivity;
+//     doc["turbidity"] = data.turbidity;
+//     doc["waterLevel"] = data.waterLevel;
 
-    String json;
-    serializeJson(doc, json);
+//     String json;
+//     serializeJson(doc, json);
 
-    // Send json as text websocket message to all connected clients
-    ws.textAll(json);
-}
+//     // Send json as text websocket message to all connected clients
+//     ws.textAll(json);
+// }
