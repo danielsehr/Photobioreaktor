@@ -1,5 +1,5 @@
 #pragma once
-#include "core/SystemTypes.h"
+#include "core/SensorData.h"
 
 class StorageManager{
     public:
