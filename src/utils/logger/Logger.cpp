@@ -45,13 +45,15 @@ void Logger::info(const SensorData& data)
     snprintf(
         buffer,
         sizeof(buffer),
-        "Timestamp: %d\n"
+        "Uptime Seconds: %d\n"
         "Temperature: %.1f °C\n"
-        "Humidity: %.1f%%\n"
+        "Conductivity: %.1f%%\n"
+        "Turbidity: %.1f%%\n"
         "Valid: %s",
-        data.timestamp,
-        data.temperatureCelcius,
-        data.humidityPercent,
+        data.uptimeSeconds,
+        data.temperature,
+        data.conductivity,
+        data.turbidity,
         data.valid ? "true" : "false"
     );
 

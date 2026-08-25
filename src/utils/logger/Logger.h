@@ -1,7 +1,5 @@
 #pragma once
-
-#include "state/SensorData.h"
-
+#include "core/SensorData.h"
 
 class Logger
 {
