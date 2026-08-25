@@ -1,7 +1,7 @@
 #pragma once
-#include <core/SystemTypes.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include "core/SensorData.h"
 
 
 class SensorManager{
@@ -15,8 +15,6 @@ class SensorManager{
 
     private:
         SensorData data;
-
-        // Hardware
         OneWire oneWire;
         DallasTemperature tempSensor;
 
