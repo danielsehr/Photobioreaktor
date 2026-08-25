@@ -1,4 +1,5 @@
 #pragma once
+#include "core/SensorData.h"
 #include "core/SystemTypes.h"
 
 
