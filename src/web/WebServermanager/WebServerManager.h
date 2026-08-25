@@ -7,13 +7,12 @@
 #include "sensors/SensorManager.h"
 #include "storage/StorageMananger.h"
 #include "time/RTCManager.h"
-#include "web/WebSocketManager.h"
+#include "web/WebSocketManager/WebSocketManager.h"
 
 
 class WebServerManager 
 {
 public:
-    // Constructor: blueprint how the class is constructed
     WebServerManager(
         SettingsManager& settingsManager,
         SensorManager& sensorManager,
