@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photobioreaktor Dashboard</title>
-    
+
     <link rel="stylesheet" href="style.css">
-    
+
+    <script src="js/ui/chart.min.js"></script>
     <script type="module" src="js/main.js"></script>
     <!-- dependencies -->
     <!-- hammer.min.js has to come BEFORE chartjs-plugin-zoom.min.js -->
@@ -86,7 +87,7 @@
                 <div class="chart-container">
 
                     <!-- Time Range -->
-                    <div class="timerange-container">
+                    <!-- <div class="timerange-container">
                         <label for="timeRange">Zeitraum:</label>
                         <select id="timeRange">
                             <option value="today">Heute</option>
@@ -98,25 +99,33 @@
                         <div class="button-container">
                             <button id="filterButton">Zeitraum anzeigen</button>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <!-- Chart -->
-                    <div class="chart">
-                        <canvas id="sensorChart"></canvas>
-                    </div>
+                    <section class="chart-section">
+                        <div class="chart-container">
+                            <canvas id="chart"></canvas>
+                        </div>
 
-                    <!-- Chart Buttons -->
-                    <div class="chart-button-container">
-                        <button onclick="sensorChart.resetZoom()">Reset Zoom</button>
+                        <!-- Chart Buttons -->
+                        <div class="chart-button-container">
+                            <!-- <input id="experimentName" type="text" , placeholder="Experiment Name"> -->
 
-                        <p>
+                            <button id="startExperiment">Start</button>
+
+                            <button id="stopExperiment" disabled>Stop</button>
+
+                            <select id="selectExperiment"></select>
+
+                            <button id="downloadCsv">Download CSV</button>
+
+                            <!-- <button onclick="sensorChart.resetZoom()">Reset Zoom</button> -->
+
+                            <!-- <p>
                             <span class="label">Messintervall:</span><span id="intervalField">--</span> <span
                                 class="unit">s</span>
-                        </p>
-                        <!-- <button onclick="pauseChart()">Pause</button>
-                    <button onclick="stopChart()">Stopp</button>
-                    <button onclick="resetChart()">Werte löschen</button> -->
-                    </div>
+                        </p> -->
+                        </div>
+                    </section>
                 </div>
 
 
@@ -130,8 +139,8 @@
                         <div class="value-box">
                             <p>
                                 <span class="label">Zeitstempel:</span>
-                            <span id="espTimeField">--</span>
-                            <span class="unit">s</span>
+                                <span id="espTimeField">--</span>
+                                <span class="unit">s</span>
                             </p>
                         </div>
 
