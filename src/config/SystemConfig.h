@@ -29,11 +29,16 @@ namespace Config{
     // DashboardService
     constexpr std::size_t RING_BUFFER_SIZE = 864;
 
+    // WebServerManager
+    constexpr std::size_t MAX_EXPERIMENTS = 32;
+    constexpr std::size_t JSON_CAPACITY = 1024;
+
     // --- Files ---
     constexpr const char* DATA_FILE = "/data.csv";
     constexpr const char* HISTORY_FILE_TEMPLATE = "/experiments/exp%03lu.csv";
 
     // --- WiFi---
-    constexpr const char* AP_SSID = "Photobioreaktor";
+    constexpr uint16_t HTTP_PORT = 80;
+    constexpr const char* AP_NAME = "Photobioreaktor";
     constexpr const char* AP_PASSWORD = "123456789";
 }
