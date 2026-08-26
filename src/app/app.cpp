@@ -35,7 +35,7 @@ void App::begin()
 
     LOG_INFO("Printing filesystem:");
 
-    // storageManager_.listDirectory("/experiments");
+    storageManager_.listDirectory("/experiments");
 
     LOG_INFO("Done.");
 }
