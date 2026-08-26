@@ -48,13 +48,13 @@ void Logger::info(const SensorData& data)
         "Uptime Seconds: %d\n"
         "Temperature: %.1f °C\n"
         "Conductivity: %.1f%%\n"
-        "Turbidity: %.1f%%\n"
-        "Valid: %s",
+        "Turbidity: %.1f%%\n",
+        // "Valid: %s",
         data.uptimeSeconds,
         data.temperature,
         data.conductivity,
-        data.turbidity,
-        data.valid ? "true" : "false"
+        data.turbidity
+        // data.valid ? "true" : "false"
     );
 
     info(buffer);
