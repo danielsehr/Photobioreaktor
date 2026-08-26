@@ -1,4 +1,4 @@
-#include "storage/StorageMananger.h"
+#include "storage/StorageManager.h"
 #include "config/SystemConfig.h"
 #include "utils/logger/Logger.h"
 
