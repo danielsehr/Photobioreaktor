@@ -1,6 +1,6 @@
 #pragma once
 
-#include "storage/StorageMananger.h"
+#include "storage/StorageManager.h"
 #include "settings/SettingsManager.h"
 #include "network/NetworkManager.h"
 #include "web/WebSocketManager/WebSocketManager.h"
@@ -21,6 +21,8 @@ class App
         void update();
 
     private:
+        RTCManager rtcManager_; 
+        
         StorageManager storageManager_;
 
         SettingsManager settingsManager_;
@@ -29,13 +31,11 @@ class App
 
         WebSocketManager webSocketManager_;
 
-        RTCManager rtcManager_; 
-
+        SensorService sensorService_;
+        
         ExperimentService experimentService_;
         
         DashboardService dashboardService_;
-        
-        SensorService sensorService_;
         
         WebServerManager webServerManager_;
 };
