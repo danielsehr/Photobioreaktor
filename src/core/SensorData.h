@@ -8,5 +8,5 @@ struct SensorData {
     float conductivity = NAN;
     float turbidity = NAN;
     int waterLevel = -1;
-    bool valid;
+    // bool valid;
 };
