@@ -7,8 +7,8 @@
 #include "time/RTCManager.h"
 #include "services/SensorService/SensorService.h"
 #include "web/WebServerManager/WebServerManager.h"
-// #include "services/DashboardService/DashboardService.h"
-// #include "services/ExperimentService/ExperimentService.h"
+#include "services/DashboardService/DashboardService.h"
+#include "services/ExperimentService/ExperimentService.h"
 
 
 class App
@@ -31,9 +31,9 @@ class App
 
         RTCManager rtcManager_; 
 
-        // ExperimentService experimentService_;
+        ExperimentService experimentService_;
         
-        // DashboardService dashboardService_;
+        DashboardService dashboardService_;
         
         SensorService sensorService_;
         

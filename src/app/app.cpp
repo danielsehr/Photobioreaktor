@@ -8,6 +8,8 @@ App::App()
     networkManager_(),
     webSocketManager_(),
     sensorService_(),
+    experimentService_(),
+    dashboardService_(webSocketManager_),
     webServerManager_(
         settingsManager_, 
         sensorService_, 
@@ -38,4 +40,28 @@ void App::begin()
     storageManager_.listDirectory("/experiments");
 
     LOG_INFO("Done.");
+}
+
+
+void App::update()
+{
+    sensorService_.update();
+
+    if (sensorService_.hasNewMeasurement())
+    {
+        const SensorData& measurement = sensorService_.latestMeasurement();
+
+        // dashboardService_.publishMeasurement(measurement);
+
+        // experimentService_.record(measurement);
+    }
+
+    if (webSocketManager_.hasNewClient())
+    {
+        // dashboardService_.publishHistory(*webSocketManager_.newClient());
+
+        webSocketManager_.clearNewClient();
+    }
+
+    sensorService_.clearNewMeasurement();
 }
