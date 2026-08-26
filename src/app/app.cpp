@@ -12,11 +12,9 @@ App::App()
     experimentService_(storageManager_),
     dashboardService_(webSocketManager_),
     webServerManager_(
-        settingsManager_, 
-        sensorService_, 
-        storageManager_,
-        rtcManager_,
-        webSocketManager_
+        webSocketManager_,
+        experimentService_,
+        storageManager_
     )
 {
 }
