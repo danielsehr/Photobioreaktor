@@ -20,9 +20,8 @@ namespace Config{
     constexpr gpio_num_t PIN_RESET        = GPIO_NUM_26;
 
 
-    // --- ADC ---
-    constexpr float ADC_REFERENCE_VOLTAGE = 3.3f;
-    constexpr uint16_t ADC_RESOLUTION     = 4095;
+    // SensorService
+    constexpr uint32_t SENSOR_UPDATE_MS = 5000U;
 
     // --- Files ---
     constexpr const char* DATA_FILE = "/data.csv";
