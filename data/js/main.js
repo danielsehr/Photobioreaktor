@@ -1,11 +1,25 @@
-const socket = new WebSocket(`ws://${location.host}/ws`);
+import { CurrentMeasurements } from "./ui/current-measurements.js";
+import { WebSocketClient } from "./web/websocket-client.js";
 
-socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
+const currentMeasurements = new CurrentMeasurements();
+const socket = new WebSocketClient();
 
-    document.getElementById('espTimeField').textContent = data.uptimeSeconds ?? '--';
-    document.getElementById('tempField').textContent = data.temperature ?? '--';
-    document.getElementById('condField').textContent = data.conductivity ?? '--';
-    document.getElementById('turbField').textContent = data.turbidity ?? '--';
-    document.getElementById('levelField').textContent = data.waterLevel ?? '--';
-};
+const connectionStatus = document.getElementById("connectionStatus")
+
+socket.onopen(() => {
+    connectionStatus.textContent = "Connected";
+    connectionStatus.classList.add("connected")
+});
+
+
+socket.onclose(() => {
+    connectionStatus.textContent = "Disconnected";
+    connectionStatus.classList.remove("connected")
+});
+
+
+socket.onMeasurement((measurement) => {
+    currentMeasurements.updateCurrentMeasurement(measurement);
+
+    // chartManager.addMeasurement(measurement);
+});
