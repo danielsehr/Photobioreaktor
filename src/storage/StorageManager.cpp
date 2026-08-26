@@ -4,7 +4,7 @@
 
 void StorageManager::begin() {
     initializeFileSystem();
-    }
+}
 
 
 void StorageManager::initializeFileSystem()
