@@ -4,7 +4,7 @@
 
 #include "core/SystemTypes.h"
 #include "settings/SettingsManager.h"
-#include "sensors/SensorManager.h"
+#include "services/SensorService/SensorService.h"
 #include "storage/StorageMananger.h"
 #include "time/RTCManager.h"
 #include "web/WebSocketManager/WebSocketManager.h"
@@ -15,7 +15,7 @@ class WebServerManager
 public:
     WebServerManager(
         SettingsManager& settingsManager,
-        SensorManager& sensorManager,
+        SensorService& sensorService,
         StorageManager& storageManager,
         RTCManager& rtcManager,
         WebSocketManager& webSocketManager
@@ -28,7 +28,7 @@ private:
     
     // Member variables of the class -> storage location inside object
     SettingsManager& settingsManager;
-    SensorManager& sensorManager;
+    SensorService& sensorService;
     StorageManager& storageManager;
     RTCManager& rtcManager;
     WebSocketManager& webSocketManager;
