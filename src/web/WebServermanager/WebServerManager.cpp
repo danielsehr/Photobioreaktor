@@ -1,17 +1,17 @@
 #include <ArduinoJson.h>
 #include <LittleFS.h>
-#include "web/WebServermanager/WebServerManager.h"
+#include "web/WebServerManager/WebServerManager.h"
 
 
 // Creates construct. parameters, binds them to adress reference i pass in
 WebServerManager::WebServerManager(
     SettingsManager& settingsMgr,
-    SensorManager& sensorMgr,
+    SensorService& sensorMgr,
     StorageManager& storageMgr,
     RTCManager& rtcMgr,
     WebSocketManager& webSocketMgr)
     : settingsManager(settingsMgr),
-      sensorManager(sensorMgr),
+      sensorService(sensorMgr),
       storageManager(storageMgr),
       rtcManager(rtcMgr),
       webSocketManager(webSocketMgr) 
