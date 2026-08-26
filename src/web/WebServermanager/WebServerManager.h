@@ -8,30 +8,34 @@
 #include "storage/StorageManager.h"
 #include "time/RTCManager.h"
 #include "web/WebSocketManager/WebSocketManager.h"
-
+#include "services/ExperimentService/ExperimentService.h"
 
 class WebServerManager 
 {
 public:
-    WebServerManager(
-        SettingsManager& settingsManager,
-        SensorService& sensorService,
-        StorageManager& storageManager,
-        RTCManager& rtcManager,
-        WebSocketManager& webSocketManager
+    explicit WebServerManager(
+        WebSocketManager& webSocketManager,
+        ExperimentService& experimentService,
+        StorageManager& storageManager
     );
 
     void begin();
 
 private:
-    AsyncWebServer server{80};
+    AsyncWebServer server_{Config::HTTP_PORT};
     
-    // Member variables of the class -> storage location inside object
-    SettingsManager& settingsManager;
-    SensorService& sensorService;
-    StorageManager& storageManager;
-    RTCManager& rtcManager;
-    WebSocketManager& webSocketManager;
+    StorageManager& storageManager_;
 
-    void setupRoutes();
+    WebSocketManager& webSocketManager_;
+
+    ExperimentService& experimentService_;
+
+    void registerRoutes();
+
+    void handleStartExperiment(AsyncWebServerRequest* request);
+    void handleStopExperiment(AsyncWebServerRequest* request);
+    void handleExperimentStatus(AsyncWebServerRequest* request);
+    void handleListExperiments(AsyncWebServerRequest* request);
+
+    void handleDownloadCsv(AsyncWebServerRequest* request);
 };
