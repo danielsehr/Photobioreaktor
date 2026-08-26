@@ -1,7 +1,5 @@
 #pragma once
-
 #include <ESPAsyncWebServer.h>
-
 
 class WebSocketManager
 {
