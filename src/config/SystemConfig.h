@@ -23,8 +23,12 @@ namespace Config{
     // SensorService
     constexpr uint32_t SENSOR_UPDATE_MS = 5000U;
 
+    // StorageManager
+    constexpr const std::size_t CSV_PATH_MAX = 32;
+
     // --- Files ---
     constexpr const char* DATA_FILE = "/data.csv";
+    constexpr const char* HISTORY_FILE_TEMPLATE = "/experiments/exp%03lu.csv";
 
     // --- WiFi---
     constexpr const char* AP_SSID = "Photobioreaktor";
