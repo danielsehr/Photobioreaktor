@@ -5,7 +5,7 @@
 #include "core/SystemTypes.h"
 #include "settings/SettingsManager.h"
 #include "services/SensorService/SensorService.h"
-#include "storage/StorageMananger.h"
+#include "storage/StorageManager.h"
 #include "time/RTCManager.h"
 #include "web/WebSocketManager/WebSocketManager.h"
 
