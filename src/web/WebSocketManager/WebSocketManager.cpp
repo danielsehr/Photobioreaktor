@@ -59,14 +59,11 @@ void WebSocketManager::onEvent(
 
     case WS_EVT_DATA:
     {
-        String message;
+        if (data == nullptr || len == 0)
+            break;
 
-        for (size_t i = 0; i < len; i++)
-        {
-            message += static_cast<char>(data[i]);
-        }
-
-        LOG_INFO(message.c_str());
+        LOG_INFO("%.*s", static_cast<int>(len),
+                reinterpret_cast<const char*>(data));
 
         client->text("Message received.");
 
