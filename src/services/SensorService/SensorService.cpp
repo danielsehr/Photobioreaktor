@@ -35,7 +35,7 @@ void SensorService::update()
     lastRead_ = now;
 
     SensorData data{};
-
+    data.uptimeSeconds = lastRead_;
     data.temperature = DS18B20Driver_.readTemperature();
     data.conductivity = KS0429Driver_.readTds(data.temperature);
     data.turbidity = 0;
