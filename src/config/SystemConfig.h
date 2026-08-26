@@ -26,6 +26,9 @@ namespace Config{
     // StorageManager
     constexpr const std::size_t CSV_PATH_MAX = 32;
 
+    // DashboardService
+    constexpr std::size_t RING_BUFFER_SIZE = 864;
+
     // --- Files ---
     constexpr const char* DATA_FILE = "/data.csv";
     constexpr const char* HISTORY_FILE_TEMPLATE = "/experiments/exp%03lu.csv";
