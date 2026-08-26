@@ -3,12 +3,13 @@
 
 App::App()
     : 
+    rtcManager_(),
     storageManager_(),
     settingsManager_(),
     networkManager_(),
     webSocketManager_(),
     sensorService_(),
-    experimentService_(),
+    experimentService_(storageManager_),
     dashboardService_(webSocketManager_),
     webServerManager_(
         settingsManager_, 
@@ -51,14 +52,14 @@ void App::update()
     {
         const SensorData& measurement = sensorService_.latestMeasurement();
 
-        // dashboardService_.publishMeasurement(measurement);
+        dashboardService_.publishMeasurement(measurement);
 
-        // experimentService_.record(measurement);
+        experimentService_.record(measurement);
     }
 
     if (webSocketManager_.hasNewClient())
     {
-        // dashboardService_.publishHistory(*webSocketManager_.newClient());
+        dashboardService_.publishHistory(*webSocketManager_.newClient());
 
         webSocketManager_.clearNewClient();
     }
