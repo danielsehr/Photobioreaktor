@@ -1,34 +1,27 @@
-#include "network/NetworkManager.h"
-#include "config/SystemConfig.h"
-
 #include <WiFi.h>
-#include <Arduino.h>
-
+#include "NetworkManager.h"
+#include "config/SystemConfig.h"
+#include "utils/logger/Logger.h"
 
 void NetworkManager::begin()
 {
+    initializeAP();
+}
+
+void NetworkManager::initializeAP()
+{
+    LOG_INFO("Start access point...");
+
+
     WiFi.mode(WIFI_AP);
 
-    bool success = WiFi.softAP(
-        Config::AP_SSID,
-        Config::AP_PASSWORD
-    );
-
-    if (!success)
+    if (!WiFi.softAP(Config::AP_NAME, Config::AP_PASSWORD))
     {
-        Serial.println("SoftAP start failed!");
+        LOG_ERROR("Failed to start AP.");
         return;
     }
 
-    IPAddress ip = WiFi.softAPIP();
 
-    snprintf(
-        ipBuffer,
-        sizeof(ipBuffer),
-        "%u.%u.%u.%u",
-        ip[0], ip[1], ip[2], ip[3]
-    );
-
-    Serial.print("AP IP: ");
-    Serial.println(ipBuffer);
+    LOG_INFO("AP started.");
+    LOG_INFO(WiFi.softAPIP().toString().c_str());
 }
