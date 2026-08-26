@@ -1,8 +1,8 @@
 #include <iostream>
-#include "control/ControlManager.h"
+#include "services/ControlService/ControlService.h"
 #include "config/SystemConfig.h"
 
-void ControlManager::update(
+void ControlService::update(
     const SensorData& data,
     const SystemSettings& settings,
     int currentHour
@@ -14,7 +14,7 @@ void ControlManager::update(
 }
 
 
-void ControlManager::controlTemperature(const SensorData& data, const SystemSettings& settings) {
+void ControlService::controlTemperature(const SensorData& data, const SystemSettings& settings) {
     const bool waterOk  = data.waterLevel > 50;
     const bool tempValid = data.temperature > 0;
 
@@ -37,7 +37,7 @@ void ControlManager::controlTemperature(const SensorData& data, const SystemSett
     }
     else
     {
-        std::cout << "ControlManager: Invalid water level or temperature!\n";
+        std::cout << "ControlService: Invalid water level or temperature!\n";
         shouldHeat = false;
     }
 
@@ -52,17 +52,17 @@ void ControlManager::controlTemperature(const SensorData& data, const SystemSett
 
         if (heaterActive)
         {
-            std::cout << "ControlManager: Heater ON\n";
+            std::cout << "ControlService: Heater ON\n";
         }
         else
         {
-            std::cout << "ControlManager: Heater OFF\n";
+            std::cout << "ControlService: Heater OFF\n";
         }
     }
 }
 
 
-void ControlManager::controlStirring(const SystemSettings& settings) {
+void ControlService::controlStirring(const SystemSettings& settings) {
     constexpr unsigned long MS_PER_MINUTE = 60UL * 1000UL;
 
     const unsigned long stirIntervalMs =
@@ -100,17 +100,17 @@ void ControlManager::controlStirring(const SystemSettings& settings) {
         
         if (stirringActive)
         {
-            std::cout << "ControlManager: Stirring ON\n";
+            std::cout << "ControlService: Stirring ON\n";
         }
         else
         {
-            std::cout << "ControlManager: Stirring OFF\n";
+            std::cout << "ControlService: Stirring OFF\n";
         }
     }
 }
 
 
-void ControlManager::controlLight(const SystemSettings& settings, int currentHour) {
+void ControlService::controlLight(const SystemSettings& settings, int currentHour) {
 
     bool shouldLight = lightActive;
 
@@ -136,11 +136,11 @@ void ControlManager::controlLight(const SystemSettings& settings, int currentHou
         
         if (lightActive)
         {
-            std::cout << "ControlManager: Light ON\n";
+            std::cout << "ControlService: Light ON\n";
         }
         else
         {
-            std::cout << "ControlManager: Light OFF\n";
+            std::cout << "ControlService: Light OFF\n";
         }
     }
 }

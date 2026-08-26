@@ -3,7 +3,7 @@
 #include "core/SystemTypes.h"
 
 
-class ControlManager {
+class ControlService {
     public:
         void update(const SensorData& data, const SystemSettings& settings, int currentHour);
 
