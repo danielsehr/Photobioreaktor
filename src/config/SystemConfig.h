@@ -33,6 +33,10 @@ namespace Config{
     constexpr std::size_t MAX_EXPERIMENTS = 32;
     constexpr std::size_t JSON_CAPACITY = 1024;
 
+    // ControlService
+    constexpr uint32_t MIN_WATER_LEVEL = 50;
+    constexpr unsigned long MS_PER_MINUTE = 60UL * 1000UL;
+
     // --- Files ---
     constexpr const char* DATA_FILE = "/data.csv";
     constexpr const char* HISTORY_FILE_TEMPLATE = "/experiments/exp%03lu.csv";
