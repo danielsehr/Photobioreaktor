@@ -1,211 +1,291 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="de">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Photobioreaktor Dashboard</title>
 
     <link rel="stylesheet" href="style.css">
 
+    <!-- Chart.js -->
     <script src="js/ui/chart.min.js"></script>
+
+    <!-- Application -->
     <script type="module" src="js/main.js"></script>
-    <!-- dependencies -->
-    <!-- hammer.min.js has to come BEFORE chartjs-plugin-zoom.min.js -->
-    <!-- <script src="js/helper/chart.umd.js"></script>
-    <script src="js/helper/hammer.min.js"></script>
-    <script src="js/helper/chartjs-plugin-zoom.min.js"></script>
-    <script src="js/helper/date-fns.js"></script>
-    <script src="js/helper/chartjs-adapter-date-fns.umd.js"></script>
-     -->
 </head>
 
 <body>
+
     <main class="dashboard">
-        <!-- TOP NAV -->
-        <div class="topnav">
-            <h1>Photobioreaktor</h1>
-        </div>
+
+        <!-- ==================== HEADER ==================== -->
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">Photobioreaktor</h1>
+        </header>
 
 
-        <!-- MAIN CONTAINER -->
-        <div class="container">
+        <!-- ==================== MAIN CONTENT ==================== -->
+        <div class="dashboard-content">
 
-            <!-- LEFT CONTAINER -->
-            <div class="left-container">
+            <!-- ==================== SETTINGS ==================== -->
+            <section class="panel settings-panel">
 
-                <!-- SET PARAM -->
-                <div class="settings">
+                <header class="panel-header">
                     <h2>Einstellungen</h2>
-                    <form class="form-grid" id="form-grid" action="/get">
+                </header>
 
-                        <label for="MaxTempField">Maximale Temperatur (°C):</label>
-                        <input type="number" id="MaxTempField" name="Maximale Temperatur">
+                <form class="settings-form" id="settingsForm" action="/get" method="get">
 
-                        <label for="MinTempField">Minimale Temperatur (°C):</label>
-                        <input type="number" id="MinTempField" name="Minimale Temperatur">
+                    <div class="form-group">
+                        <label for="maxTemperatureField">
+                            Maximale Temperatur (°C)
+                        </label>
 
-                        <label for="StirrIntField">Rührintervall (min):</label>
-                        <input type="number" id="StirrIntField" name="Rührintervall">
-
-                        <label for="StirrDurField">Rührdauer (min):</label>
-                        <input type="number" id="StirrDurField" name="Rührdauer">
-
-                        <label for="LightOnField">Beleuchtung an:</label>
-                        <input type="number" id="LightOnField" name="Beleuchtung an">
-
-                        <label for="LightOffField">Beleuchtung aus:</label>
-                        <input type="number" id="LightOffField" name="Beleuchtung aus">
-
-                        <label for="dateField">Datum:</label>
-                        <input type="date" id="dateField">
-
-                        <label for="timeField">Uhrzeit:</label>
-                        <input type="time" id="timeField" step="1">
-
-                        <label for="MeasIntField">Messintervall (s):</label>
-                        <input type="number" id="MeasIntField" name="Speicherintervall">
-                    </form>
-                    <!-- Save Button -->
-                    <div class="settings-button-container">
-                        <button id="saveButton">Einstellungen speichern</button>
+                        <input type="number" id="maxTemperatureField" name="Maximale Temperatur" step="0.1">
                     </div>
-                </div>
 
-                <!-- DATA DOWNLOAD -->
-                <div class="download-container">
-                    <h2>Download</h2>
-                    <div class="download-button-container">
-                        <button id="downloadButton" onclick="downloadCSV()">Download CSV</button>
+
+                    <div class="form-group">
+                        <label for="minTemperatureField">
+                            Minimale Temperatur (°C)
+                        </label>
+
+                        <input type="number" id="minTemperatureField" name="Minimale Temperatur" step="0.1">
                     </div>
-                </div>
-            </div>
 
 
-            <!-- RIGHT CONTAINER -->
-            <div class="right-container">
-                <div class="chart-container">
+                    <div class="form-group">
+                        <label for="stirIntervalField">
+                            Rührintervall (min)
+                        </label>
 
-                    <!-- Time Range -->
-                    <!-- <div class="timerange-container">
-                        <label for="timeRange">Zeitraum:</label>
-                        <select id="timeRange">
-                            <option value="today">Heute</option>
-                            <option value="yesterday">Gestern</option>
-                            <option value="7days">Letzte 7 Tage</option>
-                            <option value="30days">Letzte 30 Tage</option>
-                            <option value="all">Alles</option>
+                        <input type="number" id="stirIntervalField" name="Rührintervall" min="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="stirDurationField">
+                            Rührdauer (min)
+                        </label>
+
+                        <input type="number" id="stirDurationField" name="Rührdauer" min="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="lightOnField">
+                            Beleuchtung an
+                        </label>
+
+                        <input type="number" id="lightOnField" name="Beleuchtung an" min="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="lightOffField">
+                            Beleuchtung aus
+                        </label>
+
+                        <input type="number" id="lightOffField" name="Beleuchtung aus" min="0">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="dateField">
+                            Datum
+                        </label>
+
+                        <input type="date" id="dateField" name="Datum">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="timeField">
+                            Uhrzeit
+                        </label>
+
+                        <input type="time" id="timeField" name="Uhrzeit" step="1">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="measurementIntervalField">
+                            Messintervall (s)
+                        </label>
+
+                        <input type="number" id="measurementIntervalField" name="Speicherintervall" min="0">
+                    </div>
+
+
+                    <div class="settings-actions">
+                        <button type="button" id="saveButton">
+                            Einstellungen speichern
+                        </button>
+                    </div>
+
+                </form>
+
+            </section>
+
+
+            <!-- ==================== MONITORING ==================== -->
+            <section class="monitoring-panel">
+
+                <!-- ==================== CHART ==================== -->
+                <section class="panel chart-panel">
+
+                    <header class="panel-header">
+                        <h2>Messdaten</h2>
+                    </header>
+
+                    <div class="chart-wrapper">
+                        <canvas id="chart"></canvas>
+                    </div>
+
+
+                    <div class="chart-controls">
+
+                        <button type="button" id="startExperiment">
+                            Start
+                        </button>
+
+
+                        <button type="button" id="stopExperiment" disabled>
+                            Stop
+                        </button>
+
+
+                        <select id="selectExperiment" aria-label="Experiment auswählen">
                         </select>
-                        <div class="button-container">
-                            <button id="filterButton">Zeitraum anzeigen</button>
-                        </div>
-                    </div> -->
-
-                    <section class="chart-section">
-                        <div class="chart-container">
-                            <canvas id="chart"></canvas>
-                        </div>
-
-                        <!-- Chart Buttons -->
-                        <div class="chart-button-container">
-                            <!-- <input id="experimentName" type="text" , placeholder="Experiment Name"> -->
-
-                            <button id="startExperiment">Start</button>
-
-                            <button id="stopExperiment" disabled>Stop</button>
-
-                            <select id="selectExperiment"></select>
-
-                            <button id="downloadCsv">Download CSV</button>
-
-                            <!-- <button onclick="sensorChart.resetZoom()">Reset Zoom</button> -->
-
-                            <!-- <p>
-                            <span class="label">Messintervall:</span><span id="intervalField">--</span> <span
-                                class="unit">s</span>
-                        </p> -->
-                        </div>
-                    </section>
-                </div>
 
 
-                <!-- LIVE VALUES -->
-                <section class="values" aria-labelledby="live-values-heading">
-                    <div class="header-values">
-                        <h2 id="live-values-heading">Live-Werte</h2>
+                        <button type="button" id="downloadCsv">
+                            Download CSV
+                        </button>
+
                     </div>
 
-                    <div class="sensor-values">
-                        <div class="value-box">
-                            <p>
-                                <span class="label">Zeitstempel:</span>
-                                <span id="espTimeField">--</span>
-                                <span class="unit">s</span>
-                            </p>
-                        </div>
-
-                        <div class="value-box">
-                            <p>
-                                <span class="label">Temperatur:</span>
-                                <span id="tempField">--</span>
-                                <span class="unit">°C</span>
-                            </p>
-                        </div>
-
-                        <div class="value-box">
-                            <p>
-                                <span class="label">Leitfähigkeit:</span>
-                                <span id="condField">--</span>
-                                <span class="unit">ppm</span>
-                            </p>
-                        </div>
-
-                        <div class="value-box">
-                            <p>
-                                <span class="label">TDS:</span>
-                                <span id="turbField">--</span>
-                                <span class="unit">g/L</span>
-                            </p>
-                        </div>
-
-                        <div class="value-box">
-                            <p>
-                                <span class="label">Füllvolumen:</span>
-                                <span id="levelField">--</span>
-                                <span class="unit">%</span>
-                            </p>
-                        </div>
-                    </div>
                 </section>
-            </div>
+
+
+                <!-- ==================== LIVE VALUES ==================== -->
+                <section class="panel sensor-panel" aria-labelledby="live-values-heading">
+
+                    <header class="panel-header">
+                        <h2 id="live-values-heading"></h2>
+                    </header>
+
+
+                    <div class="sensor-grid">
+
+                        <article class="sensor-card">
+                            <span class="sensor-label">
+                                Zeitstempel
+                            </span>
+
+                            <span class="sensor-value">
+                                <span id="espTimeField">--</span>
+                                <span class="sensor-unit">s</span>
+                            </span>
+                        </article>
+
+
+                        <article class="sensor-card">
+                            <span class="sensor-label">
+                                Temperatur
+                            </span>
+
+                            <span class="sensor-value">
+                                <span id="tempField">--</span>
+                                <span class="sensor-unit">°C</span>
+                            </span>
+                        </article>
+
+
+                        <article class="sensor-card">
+                            <span class="sensor-label">
+                                Leitfähigkeit
+                            </span>
+
+                            <span class="sensor-value">
+                                <span id="condField">--</span>
+                                <span class="sensor-unit">ppm</span>
+                            </span>
+                        </article>
+
+
+                        <article class="sensor-card">
+                            <span class="sensor-label">
+                                TDS
+                            </span>
+
+                            <span class="sensor-value">
+                                <span id="turbField">--</span>
+                                <span class="sensor-unit">g/L</span>
+                            </span>
+                        </article>
+
+
+                        <article class="sensor-card">
+                            <span class="sensor-label">
+                                Füllvolumen
+                            </span>
+
+                            <span class="sensor-value">
+                                <span id="levelField">--</span>
+                                <span class="sensor-unit">%</span>
+                            </span>
+                        </article>
+
+                    </div>
+
+                </section>
+
+            </section>
+
         </div>
 
 
-        <section class="state-section">
-            <div class="state-container">
-                <div class="connection-status">
-                    <span>Connection:</span>
-                    <span id="connectionStatus">Disconnected</span>
-                </div>
+        <!-- ==================== STATUS ==================== -->
+        <section class="status-panel">
 
-                <div class="experiment-status">
-                    <span>Measurement:</span>
-                    <span id="experimentStatus">Not recording</span>
-                </div>
+            <div class="status-item">
+                <span class="status-label">Verbindung</span>
+                <span class="status-value" id="connectionStatus">
+                    Getrennt
+                </span>
             </div>
+
+
+            <div class="status-item">
+                <span class="status-label">Messung</span>
+                <span class="status-value" id="experimentStatus">
+                    Keine Aufnahme
+                </span>
+            </div>
+
         </section>
 
 
-        <!-- Dark Mode  -->
-        <div class="bottom-nav">
-            <div class="dark-mode">
-                <label class="switch">
+        <!-- ==================== FOOTER ==================== -->
+        <footer class="dashboard-footer">
+
+            <div class="theme-toggle">
+
+                <label class="toggle" for="darkModeToggle">
                     <input type="checkbox" id="darkModeToggle">
-                    <span class="slider"></span>
+
+                    <span class="toggle-slider"></span>
                 </label>
+
                 <span>Dark Mode</span>
+
             </div>
-        </div>
+
+        </footer>
+
     </main>
 
 </body>
