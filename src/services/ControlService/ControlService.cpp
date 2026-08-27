@@ -1,6 +1,7 @@
 #include <iostream>
-#include "services/ControlService/ControlService.h"
 #include "config/SystemConfig.h"
+#include "utils/logger/Logger.h"
+#include "services/ControlService/ControlService.h"
 
 void ControlService::update(
     const SensorData& data,
@@ -15,7 +16,7 @@ void ControlService::update(
 
 
 void ControlService::controlTemperature(const SensorData& data, const SystemSettings& settings) {
-    const bool waterOk  = data.waterLevel > 50;
+    const bool waterOk  = data.waterLevel > Config::MIN_WATER_LEVEL;
     const bool tempValid = data.temperature > 0;
 
     bool shouldHeat = false;
@@ -37,7 +38,7 @@ void ControlService::controlTemperature(const SensorData& data, const SystemSett
     }
     else
     {
-        std::cout << "ControlService: Invalid water level or temperature!\n";
+        LOG_INFO("[ControlService] Invalid water level or temperature!\n");
         shouldHeat = false;
     }
 
@@ -45,67 +46,52 @@ void ControlService::controlTemperature(const SensorData& data, const SystemSett
     if (shouldHeat != heaterActive_)
     {
         heaterActive_ = shouldHeat;
+        
+        actuatorService_.setHeater(heaterActive_);
 
-        digitalWrite(
-            Config::PIN_HEATER,
-            heaterActive_ ? HIGH : LOW);
-
-        if (heaterActive_)
-        {
-            std::cout << "ControlService: Heater ON\n";
-        }
-        else
-        {
-            std::cout << "ControlService: Heater OFF\n";
-        }
+        LOG_INFO(
+            heaterActive_
+                ? "[ControlService] Heater ON"
+                : "[ControlService] Heater OFF"
+        );
     }
 }
 
 
 void ControlService::controlStirring(const SystemSettings& settings) {
-    constexpr unsigned long MS_PER_MINUTE = 60UL * 1000UL;
-
     const unsigned long stirIntervalMs =
-        static_cast<unsigned long>(settings.stirIntervalMinutes) * MS_PER_MINUTE;
+        static_cast<unsigned long>(settings.stirIntervalMinutes) * Config::MS_PER_MINUTE;
     
     const unsigned long stirDurationMs =
-        static_cast<unsigned long>(settings.stirDurationMinutes) * MS_PER_MINUTE;
+        static_cast<unsigned long>(settings.stirDurationMinutes) * Config::MS_PER_MINUTE;
 
     unsigned long now = millis();
 
     bool shouldStir = stirringActive_;
 
-    if (!stirringActive_ && now - lastStirTime >= stirIntervalMs)
+    if (!stirringActive_ && now - lastStirTime_ >= stirIntervalMs)
     {
         shouldStir = true;
-        stirStartTime = now;
-        
+        stirStartTime_ = now;
     }
     
-    if (stirringActive_ && now - stirStartTime >= stirDurationMs)
+    if (stirringActive_ && now - stirStartTime_ >= stirDurationMs)
     {
         shouldStir = false;
-        lastStirTime = now;
+        lastStirTime_ = now;
     }
-
 
     if (shouldStir != stirringActive_) 
     {
         stirringActive_ = shouldStir;
 
-        digitalWrite(
-            Config::PIN_STIRRER,
-            stirringActive_ ? HIGH : LOW
-        );
+        actuatorService_.setStirrer(stirringActive_);
         
-        if (stirringActive_)
-        {
-            std::cout << "ControlService: Stirring ON\n";
-        }
-        else
-        {
-            std::cout << "ControlService: Stirring OFF\n";
-        }
+        LOG_INFO(
+            stirringActive_
+                ? "[ControlService] Stirring ON\n"
+                : "[ControlService] Stirring OFF\n"
+        );
     }
 }
 
@@ -117,30 +103,22 @@ void ControlService::controlLight(const SystemSettings& settings, int currentHou
     if (currentHour >= settings.lightOnHour && currentHour < settings.lightOffHour)
     {
         shouldLight = true;
-        // digitalWrite(Config::PIN_LIGHT, HIGH);
     }
     else 
     {
         shouldLight = false;
-        // digitalWrite(Config::PIN_LIGHT, LOW);
     } 
 
     if (shouldLight != lightActive_) 
     {
         lightActive_ = shouldLight;
 
-        digitalWrite(
-            Config::PIN_LIGHT,
-            lightActive_ ? HIGH : LOW
-        );
+        actuatorService_.setLigth(lightActive_);
         
-        if (lightActive_)
-        {
-            std::cout << "ControlService: Light ON\n";
-        }
-        else
-        {
-            std::cout << "ControlService: Light OFF\n";
-        }
+        LOG_INFO(
+            lightActive_
+                ? "[ControlService] Light ON\n"
+                : "[ControlService] Light OFF\n"
+        );
     }
 }

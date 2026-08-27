@@ -1,6 +1,7 @@
 #pragma once
 #include "core/SensorData.h"
 #include "core/SystemTypes.h"
+#include "services/ActuatorService/ActuatorService.h"
 
 class ControlService {
     public:
@@ -8,12 +9,20 @@ class ControlService {
 
     private:
         void controlTemperature(const SensorData& data, const SystemSettings& settings);
+       
         void controlStirring(const SystemSettings& settings);
+       
         void controlLight(const SystemSettings& settings, int currentHour);
 
         bool heaterActive_ = false;
+
         bool stirringActive_ = false;
+
         bool lightActive_ = false;
-        unsigned long stirStartTime = 0;
-        unsigned long lastStirTime = 0;
+
+        unsigned long stirStartTime_ = 0;
+
+        unsigned long lastStirTime_ = 0;
+
+        ActuatorService actuatorService_;
 };
