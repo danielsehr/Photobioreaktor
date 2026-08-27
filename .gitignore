@@ -7,3 +7,6 @@
 
 # Files
 *.code-workspace
+
+# Folders
+*/legacy/
