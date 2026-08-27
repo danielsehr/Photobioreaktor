@@ -45,7 +45,7 @@ bool StorageManager::createExperiment(const Experiment& experiment)
         return false;
     }
 
-    file.println("timestamp, temperature_celcius, humidity_percent, valid");
+    file.println("timestamp, temperature, conductivity, turbidity, waterlevel");
 
     file.close();
 
