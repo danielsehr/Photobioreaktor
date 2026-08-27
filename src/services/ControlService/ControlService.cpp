@@ -32,7 +32,7 @@ void ControlService::controlTemperature(const SensorData& data, const SystemSett
         }
         else
         {
-            shouldHeat = heaterActive;
+            shouldHeat = heaterActive_;
         }
     }
     else
@@ -42,15 +42,15 @@ void ControlService::controlTemperature(const SensorData& data, const SystemSett
     }
 
     
-    if (shouldHeat != heaterActive)
+    if (shouldHeat != heaterActive_)
     {
-        heaterActive = shouldHeat;
+        heaterActive_ = shouldHeat;
 
         digitalWrite(
             Config::PIN_HEATER,
-            heaterActive ? HIGH : LOW);
+            heaterActive_ ? HIGH : LOW);
 
-        if (heaterActive)
+        if (heaterActive_)
         {
             std::cout << "ControlService: Heater ON\n";
         }
@@ -73,32 +73,32 @@ void ControlService::controlStirring(const SystemSettings& settings) {
 
     unsigned long now = millis();
 
-    bool shouldStir = stirringActive;
+    bool shouldStir = stirringActive_;
 
-    if (!stirringActive && now - lastStirTime >= stirIntervalMs)
+    if (!stirringActive_ && now - lastStirTime >= stirIntervalMs)
     {
         shouldStir = true;
         stirStartTime = now;
         
     }
     
-    if (stirringActive && now - stirStartTime >= stirDurationMs)
+    if (stirringActive_ && now - stirStartTime >= stirDurationMs)
     {
         shouldStir = false;
         lastStirTime = now;
     }
 
 
-    if (shouldStir != stirringActive) 
+    if (shouldStir != stirringActive_) 
     {
-        stirringActive = shouldStir;
+        stirringActive_ = shouldStir;
 
         digitalWrite(
             Config::PIN_STIRRER,
-            stirringActive ? HIGH : LOW
+            stirringActive_ ? HIGH : LOW
         );
         
-        if (stirringActive)
+        if (stirringActive_)
         {
             std::cout << "ControlService: Stirring ON\n";
         }
@@ -112,7 +112,7 @@ void ControlService::controlStirring(const SystemSettings& settings) {
 
 void ControlService::controlLight(const SystemSettings& settings, int currentHour) {
 
-    bool shouldLight = lightActive;
+    bool shouldLight = lightActive_;
 
     if (currentHour >= settings.lightOnHour && currentHour < settings.lightOffHour)
     {
@@ -125,16 +125,16 @@ void ControlService::controlLight(const SystemSettings& settings, int currentHou
         // digitalWrite(Config::PIN_LIGHT, LOW);
     } 
 
-    if (shouldLight != lightActive) 
+    if (shouldLight != lightActive_) 
     {
-        lightActive = shouldLight;
+        lightActive_ = shouldLight;
 
         digitalWrite(
             Config::PIN_LIGHT,
-            lightActive ? HIGH : LOW
+            lightActive_ ? HIGH : LOW
         );
         
-        if (lightActive)
+        if (lightActive_)
         {
             std::cout << "ControlService: Light ON\n";
         }
