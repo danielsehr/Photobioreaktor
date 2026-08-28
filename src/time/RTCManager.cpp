@@ -8,20 +8,37 @@ void RTCManager::begin() {
 
 bool RTCManager::setDateTime(const char* dateStr, const char* timeStr) 
 {
-    int year, month, day;
-    int hour, minute, second = 0;
+    int year = 0;
+    int month = 0;
+    int day = 0;
+
+    int hour = 0;
+    int minute = 0;
+    int second = 0;
 
     if(sscanf(dateStr, "%4d-%2d-%2d", &year, &month, &day) != 3)
+    {
         return false;
+    }
     
-    int parsed = sscanf(timeStr, "%2d:%2d:%2d", &hour, &minute, &second);
+    const int parsed = sscanf(timeStr, "%2d:%2d:%2d", &hour, &minute, &second);
 
     if (parsed < 2)
     {
         return false;
     }
 
-    rtc.setTime(second, minute, hour, day, month, year);
+    if (
+        month < 1 || month > 12 ||
+        day < 1 || day > 31 ||
+        hour < 0 || hour > 23 ||
+        minute < 0 || minute > 59 ||
+        second < 0 || second > 59
+    )
+    {
+        return false;
+    }
+    rtc_.setTime(second, minute, hour, day, month, year);
 
     update();
 
@@ -30,33 +47,33 @@ bool RTCManager::setDateTime(const char* dateStr, const char* timeStr)
 
 void RTCManager::update() 
 {
-    currentHour = rtc.getHour(true);
-
     snprintf(
-        dateBuffer, sizeof(dateBuffer),
+        dateBuffer_, 
+        sizeof(dateBuffer_),
         "%04d-%02d-%02d",
-        rtc.getYear(),
-        rtc.getMonth() + 1,
-        rtc.getDay()
+        rtc_.getYear(),
+        rtc_.getMonth() + 1,
+        rtc_.getDay()
     );
 
     snprintf(
-        timeBuffer, sizeof(timeBuffer),
+        timeBuffer_, sizeof(timeBuffer_),
         "%02d:%02d:%02d",
-        rtc.getHour(true),
-        rtc.getMinute(),
-        rtc.getSecond()
+        rtc_.getHour(true),
+        rtc_.getMinute(),
+        rtc_.getSecond()
     );
 }
 
 const char* RTCManager::getDate() const {
-    return dateBuffer;
+    return dateBuffer_;
 }
 
 const char* RTCManager::getTime() const {
-    return timeBuffer;
+    return timeBuffer_;
 }
 
-int RTCManager::getHour() const {
-    return currentHour;
+int RTCManager::getHour()
+{
+    return rtc_.getHour(true);
 }

@@ -10,17 +10,18 @@ class RTCManager {
 
         void update();
 
-        // Getters
         const char* getDate() const;
+        
         const char* getTime() const;
 
-        int getHour() const;
+        int getHour();
 
     private:
-        ESP32Time rtc{0};
+        ESP32Time rtc_{0};
 
-        char dateBuffer[11] = {}; // char buffer instead of heap allocating strings
-        char timeBuffer[9] = {};
+        char dateBuffer_[11] = {};
+        
+        char timeBuffer_[9] = {};
 
-        int currentHour = 0;
+        int currentHour_= 0;
 };
