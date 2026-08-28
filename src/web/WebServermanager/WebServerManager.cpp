@@ -7,9 +7,9 @@ WebServerManager::WebServerManager(
     WebSocketManager& webSocketManager,
     ExperimentService& experimentService,
     StorageManager& storageManager
-) : webSocketManager_(webSocketManager),
-    experimentService_(experimentService),
-    storageManager_(storageManager)
+    ) : webSocketManager_(webSocketManager),
+        experimentService_(experimentService),
+        storageManager_(storageManager)
 {
 }
 

@@ -2,7 +2,7 @@
 
 #include <ESPAsyncWebServer.h>
 
-#include "core/SystemTypes.h"
+#include "core/SystemSettings.h"
 #include "settings/SettingsManager.h"
 #include "services/SensorService/SensorService.h"
 #include "storage/StorageManager.h"
@@ -24,11 +24,11 @@ public:
 private:
     AsyncWebServer server_{Config::HTTP_PORT};
     
-    StorageManager& storageManager_;
-
     WebSocketManager& webSocketManager_;
-
+    
     ExperimentService& experimentService_;
+    
+    StorageManager& storageManager_;
 
     void registerRoutes();
 
