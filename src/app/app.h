@@ -6,6 +6,7 @@
 #include "web/WebSocketManager/WebSocketManager.h"
 #include "time/RTCManager.h"
 #include "services/SensorService/SensorService.h"
+#include "services/ControlService/ControlService.h"
 #include "web/WebServerManager/WebServerManager.h"
 #include "services/DashboardService/DashboardService.h"
 #include "services/ExperimentService/ExperimentService.h"
@@ -32,6 +33,8 @@ class App
         WebSocketManager webSocketManager_;
 
         SensorService sensorService_;
+
+        ControlService controlService_;
         
         ExperimentService experimentService_;
         
