@@ -24,12 +24,12 @@ https://lernenmitcirculareconomy.de/kulitivierung-von-cyanobaktieren-und-mikroal
 - Historical sensor data visualization
 
 ### Control
-- Control of connected actuators:
+- Actuators:
     - Stirrer
     - Heatpad
     - Growing Light
 
-- Configurable operating parameters:
+- Configurable parameters:
     - Max. Temperature
     - Min. Temperature
     - Stirring Interval
@@ -45,7 +45,6 @@ https://lernenmitcirculareconomy.de/kulitivierung-von-cyanobaktieren-und-mikroal
 - Interactive charts using Chart.js
 
 ### Embedded System
-- ESP32-based controller
 - Wi-Fi access point
 - LittleFS for local filesystem storage
 - Configuration using Preferences library
@@ -58,7 +57,7 @@ https://lernenmitcirculareconomy.de/kulitivierung-von-cyanobaktieren-und-mikroal
 ### Sensors
 | Sensor	  |  Purpose                                |
 |-------------|-----------------------------------------|
-| DS18B20	  |  Temperature measurement                |
-| KS0429      |  Measurement of total dissolved solids  |
-| HC-SR04	  |  Water-level measurement by distance    |
+| DS18B20	  |  Temperature              |
+| KS0429      |  Total dissolved solids (TDS)  |
+| HC-SR04	  |  Water-level    |
 
