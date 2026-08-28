@@ -116,7 +116,7 @@ void ControlService::controlLight(const SystemSettings& settings, int currentHou
     {
         lightActive_ = shouldLight;
 
-        actuatorService_.setLigth(lightActive_);
+        actuatorService_.setLight(lightActive_);
         
         LOG_INFO(
             lightActive_
