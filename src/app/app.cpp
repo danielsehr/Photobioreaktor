@@ -6,9 +6,13 @@ App::App()
     rtcManager_(),
     storageManager_(),
     settingsManager_(),
+
     networkManager_(),
     webSocketManager_(),
+
     sensorService_(),
+    controlService_(),
+    
     experimentService_(storageManager_),
     dashboardService_(webSocketManager_),
     webServerManager_(
@@ -31,8 +35,9 @@ void App::begin()
     
     sensorService_.begin();
 
-    LOG_INFO("Application started.");
+    settingsManager_.begin();
 
+    LOG_INFO("Application started.");
 
     LOG_INFO("Printing filesystem:");
 
@@ -50,6 +55,12 @@ void App::update()
     {
         const SensorData& measurement = sensorService_.latestMeasurement();
 
+        controlService_.update(
+            measurement, 
+            settingsManager_.getSettings(), 
+            rtcManager_.getHour()
+        );
+        
         dashboardService_.publishMeasurement(measurement);
 
         experimentService_.record(measurement);
