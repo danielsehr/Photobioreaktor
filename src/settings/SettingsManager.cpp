@@ -61,19 +61,40 @@ bool SettingsManager::update(const SystemSettings& newSettings) {
         return false;
     }
     
-    preferences_.putInt("MaxTemp", newSettings.maximalTemperatureCelcius);
+    preferences_.putInt(
+        "maximalTemperatureCelcius", 
+        newSettings.maximalTemperatureCelcius
+    );
 
-    preferences_.putInt("MinTemp", newSettings.minimalTemperatureCelcius);
+    preferences_.putInt(
+        "minimalTemperatureCelcius", 
+        newSettings.minimalTemperatureCelcius
+    );
 
-    preferences_.putInt("StirrInt", newSettings.stirringIntervalMinutes);
+    preferences_.putInt(
+        "stirringIntervalMinutes",
+         newSettings.stirringIntervalMinutes
+    );
 
-    preferences_.putInt("StirrDur", newSettings.stirringDurationMinutes);
+    preferences_.putInt(
+        "stirringDurationMinutes",
+         newSettings.stirringDurationMinutes
+    );
 
-    preferences_.putInt("LightOn", newSettings.lightOnHour);
+    preferences_.putInt(
+        "lightOnHour",
+         newSettings.lightOnHour
+    );
 
-    preferences_.putInt("LightOff", newSettings.lightOffHour);
+    preferences_.putInt(
+        "lightOffHour",
+         newSettings.lightOffHour
+    );
 
-    preferences_.putInt("MeasInt", newSettings.measurementIntervalSeconds);
+    preferences_.putInt(
+        "measurementIntervalSeconds",
+         newSettings.measurementIntervalSeconds
+    );
     
     preferences_.end();
     
