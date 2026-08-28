@@ -4,11 +4,13 @@
 #include "utils/logger/Logger.h"
 
 WebServerManager::WebServerManager(
+    RTCManager& rtcManager,
     WebSocketManager& webSocketManager,
     ExperimentService& experimentService,
     StorageManager& storageManager,
     SettingsManager& settingsManager
-    ) : webSocketManager_(webSocketManager),
+    ) : rtcManager_(rtcManager),
+        webSocketManager_(webSocketManager),
         experimentService_(experimentService),
         storageManager_(storageManager),
         settingsManager_(settingsManager)
@@ -75,8 +77,24 @@ void WebServerManager::registerRoutes()
     server_.on("/api/settings", HTTP_PUT,
                [this](AsyncWebServerRequest *request)
                {
-                   handlePutSettings(request);
-               });
+               },
+               nullptr,
+               [this](AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total)
+                {
+                    handlePutSettings(request, data, len, index, total);
+                }
+            );
+
+    server_.on("/api/time", HTTP_PUT,
+               [this](AsyncWebServerRequest *request)
+               {
+               },
+               nullptr,
+               [this](AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total)
+                {
+                    handlePutTime(request, data, len, index, total);
+                }
+            );
             
 }
 
@@ -196,10 +214,10 @@ void WebServerManager::handleGetSettings(AsyncWebServerRequest *request)
 
     JsonDocument json;
 
-    json["maxTemperatureCelsius"] =
+    json["maximalTemperatureCelcius"] =
         settings.maximalTemperatureCelcius;
 
-    json["minTemperatureCelsius"] =
+    json["minimalTemperatureCelcius"] =
         settings.minimalTemperatureCelcius;
 
     json["stirringIntervalMinutes"] =
@@ -232,7 +250,85 @@ void WebServerManager::handleGetSettings(AsyncWebServerRequest *request)
     request->send(200, "application/json", response);
 }
 
-void WebServerManager::handlePutSettings(AsyncWebServerRequest* request)
+void WebServerManager::handlePutSettings(AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total)
 {
+    if (index != 0 || len != total) 
+    {
+        request->send(400, "text/plain", "[WebServerManager] Request body received in multiple chunks.");
+        LOG_ERROR("[WebServerManager] Request body received in multiple chunks.");
+        return;
+    }
 
+    JsonDocument json;
+    
+    const auto error = deserializeJson(json, data, len);
+
+    if (error)
+    {
+        request->send(400, "text/plain", "Invalid JSON.");
+        LOG_ERROR("[WebServerManager] Invalid JSON.");
+        return;
+    }
+    
+
+    SystemSettings settings;
+
+    settings.maximalTemperatureCelcius = json["maximalTemperatureCelcius"];
+
+    settings.minimalTemperatureCelcius = json["minimalTemperatureCelcius"];
+
+    settings.stirringIntervalMinutes = json["stirringIntervalMinutes"];
+
+    settings.stirringDurationMinutes = json["stirringDurationMinutes"];
+
+    settings.lightOnHour = json["lightOnHour"];
+
+    settings.lightOffHour = json["lightOffHour"];
+
+    settings.measurementIntervalSeconds = json["measurementIntervalSeconds"];
+
+    if (!settingsManager_.update(settings))
+    {
+        request->send(500, "text/plain", "[WebServerManager] Failed to save settings.");
+        LOG_ERROR("[WebServerManager] Failed to save settings.");
+        return;
+    }
+
+    request->send(200, "application/json", R"({"status":"ok"})");
+    LOG_INFO("[WebServerManager] Saved new settings.");
+}
+
+void WebServerManager::handlePutTime(AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total)
+{
+    JsonDocument json;
+
+    const auto error = deserializeJson(json, data, len);
+
+    if (error)
+    {
+        request->send(400, "text/plain", "Invalid JSON.");
+        return;
+    }
+
+    if (!json["date"].is<const char*>() || !json["time"].is<const char*>())
+    {
+        request->send(400, "text/plain", "Missing date or time.");
+        return;
+    }
+
+    const char* date = json["date"];
+
+    const char* time = json["time"];
+
+    Serial.println("WebServerManager, data and time: ");
+    Serial.println(date);
+    Serial.println(time);
+
+    if (!rtcManager_.setDateTime(date, time))
+    {
+        request->send(400, "text/plain", "Invalid date or time.");
+        return;
+    }
+
+    request->send(200, "application/json", R"({"status":"ok"})");
 }
