@@ -6,10 +6,12 @@
 WebServerManager::WebServerManager(
     WebSocketManager& webSocketManager,
     ExperimentService& experimentService,
-    StorageManager& storageManager
+    StorageManager& storageManager,
+    SettingsManager& settingsManager
     ) : webSocketManager_(webSocketManager),
         experimentService_(experimentService),
-        storageManager_(storageManager)
+        storageManager_(storageManager),
+        settingsManager_(settingsManager)
 {
 }
 
@@ -63,6 +65,19 @@ void WebServerManager::registerRoutes()
                {
                    handleListExperiments(request);
                });
+
+    server_.on("/api/settings", HTTP_GET,
+               [this](AsyncWebServerRequest *request)
+               {
+                   handleGetSettings(request);
+               });
+
+    server_.on("/api/settings", HTTP_PUT,
+               [this](AsyncWebServerRequest *request)
+               {
+                   handlePutSettings(request);
+               });
+            
 }
 
 void WebServerManager::handleStartExperiment(AsyncWebServerRequest *request)
@@ -122,8 +137,8 @@ void WebServerManager::handleListExperiments(AsyncWebServerRequest *request)
 
     if (length == 0)
     {
-        LOG_ERROR("Failed to serialize experiment list");
-        request->send(500, "text/plain", "Failed to serialize experiment list.");
+        LOG_ERROR("[WebServerManager] Failed to serialize experiment list.");
+        request->send(500, "text/plain", "[WebServerManager] Failed to serialize experiment list.");
         return;
     }
 
@@ -131,6 +146,7 @@ void WebServerManager::handleListExperiments(AsyncWebServerRequest *request)
 }
 
 void WebServerManager::handleDownloadCsv(AsyncWebServerRequest *request)
+
 {
     if (!request->hasParam("id"))
     {
@@ -172,4 +188,51 @@ void WebServerManager::handleDownloadCsv(AsyncWebServerRequest *request)
     }
 
     request->send(file, path, "text/csv", true);
+}
+
+void WebServerManager::handleGetSettings(AsyncWebServerRequest *request)
+{
+    const SystemSettings& settings = settingsManager_.getSettings();
+
+    JsonDocument json;
+
+    json["maxTemperatureCelsius"] =
+        settings.maximalTemperatureCelcius;
+
+    json["minTemperatureCelsius"] =
+        settings.minimalTemperatureCelcius;
+
+    json["stirringIntervalMinutes"] =
+        settings.stirringIntervalMinutes;
+
+    json["stirringDurationMinutes"] =
+        settings.stirringDurationMinutes;
+
+    json["lightOnHour"] =
+        settings.lightOnHour;
+
+    json["lightOffHour"] =
+        settings.lightOffHour;
+
+    json["measurementIntervalSeconds"] =
+        settings.measurementIntervalSeconds;
+    
+    
+    char response[Config::JSON_CAPACITY];
+
+    std::size_t length =  serializeJson(json, response, sizeof(response));
+
+    if (length == 0)
+    {
+        LOG_ERROR("[WebServerManager] Failed to serialize SystemSettings.");
+        request->send(500, "text/plain", "[WebServerManager] Failed to serialize SystemSettings.");
+        return;
+    }
+
+    request->send(200, "application/json", response);
+}
+
+void WebServerManager::handlePutSettings(AsyncWebServerRequest* request)
+{
+
 }
