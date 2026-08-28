@@ -55,7 +55,8 @@ void App::update()
     sensorService_.update();
 
     if (sensorService_.hasNewMeasurement())
-    {
+    {   
+        rtcManager_.update();
         LOG_INFO("RTC Date: %s", rtcManager_.getDate());
         LOG_INFO("RTC Time: %s", rtcManager_.getTime());
         
