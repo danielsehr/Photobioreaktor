@@ -7,6 +7,7 @@
 
 # Files
 *.code-workspace
+TODO.md
 
 # Folders
 */legacy/
