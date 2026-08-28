@@ -14,6 +14,7 @@ class WebServerManager
 {
 public:
     explicit WebServerManager(
+        RTCManager& rtcManager,
         WebSocketManager& webSocketManager,
         ExperimentService& experimentService,
         StorageManager& storageManager,
@@ -24,6 +25,8 @@ public:
 
 private:
     AsyncWebServer server_{Config::HTTP_PORT};
+
+    RTCManager rtcManager_;
     
     WebSocketManager& webSocketManager_;
     
@@ -43,5 +46,7 @@ private:
     void handleDownloadCsv(AsyncWebServerRequest* request);
 
     void handleGetSettings(AsyncWebServerRequest* request);
-    void handlePutSettings(AsyncWebServerRequest* request);
+    void handlePutSettings(AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total);
+
+    void handlePutTime(AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total);
 };
