@@ -16,8 +16,11 @@ void ControlService::update(
 
 
 void ControlService::controlTemperature(const SensorData& data, const SystemSettings& settings) {
-    const bool waterOk  = data.waterLevel > Config::MIN_WATER_LEVEL;
-    const bool tempValid = data.temperature > 0;
+    const bool waterOk  = 
+        data.waterLevel > Config::MIN_WATER_LEVEL;
+
+    const bool tempValid = 
+        data.temperature > 0;
 
     bool shouldHeat = false;
 

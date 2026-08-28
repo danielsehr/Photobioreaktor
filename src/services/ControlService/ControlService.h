@@ -1,6 +1,6 @@
 #pragma once
 #include "core/SensorData.h"
-#include "core/SystemTypes.h"
+#include "core/SystemSettings.h"
 #include "services/ActuatorService/ActuatorService.h"
 
 class ControlService {
