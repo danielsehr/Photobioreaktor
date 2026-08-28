@@ -12,13 +12,15 @@ App::App()
 
     sensorService_(),
     controlService_(),
-    
+
     experimentService_(storageManager_),
     dashboardService_(webSocketManager_),
     webServerManager_(
+        rtcManager_,
         webSocketManager_,
         experimentService_,
-        storageManager_
+        storageManager_,
+        settingsManager_
     )
 {
 }
@@ -26,6 +28,7 @@ App::App()
 void App::begin()
 {
     Logger::begin();
+    rtcManager_.begin();
 
     storageManager_.begin();
     
@@ -53,6 +56,9 @@ void App::update()
 
     if (sensorService_.hasNewMeasurement())
     {
+        LOG_INFO("RTC Date: %s", rtcManager_.getDate());
+        LOG_INFO("RTC Time: %s", rtcManager_.getTime());
+        
         const SensorData& measurement = sensorService_.latestMeasurement();
 
         controlService_.update(
