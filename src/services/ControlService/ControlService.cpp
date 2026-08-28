@@ -102,7 +102,7 @@ void ControlService::controlStirring(const SystemSettings& settings) {
 void ControlService::controlLight(const SystemSettings& settings, int currentHour) {
 
     bool shouldLight = lightActive_;
-
+    
     if (currentHour >= settings.lightOnHour && currentHour < settings.lightOffHour)
     {
         shouldLight = true;
