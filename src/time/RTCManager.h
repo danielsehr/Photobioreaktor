@@ -22,6 +22,4 @@ class RTCManager {
         char dateBuffer_[11] = {};
         
         char timeBuffer_[9] = {};
-
-        int currentHour_= 0;
 };
