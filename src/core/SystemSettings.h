@@ -2,10 +2,10 @@
 #include <Arduino.h>
 
 struct SystemSettings {
-    int maxTemp = 30;
-    int minTemp = 30;
-    int stirIntervalMinutes = 1;
-    int stirDurationMinutes = 1;
+    int maximalTemperatureCelcius = 30;
+    int minimalTemperatureCelcius = 30;
+    int stirringIntervalMinutes = 1;
+    int stirringDurationMinutes = 1;
     int lightOnHour = 0;
     int lightOffHour = 24;
     int measurementIntervalSeconds = 1;
