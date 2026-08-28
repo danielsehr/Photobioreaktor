@@ -5,10 +5,10 @@
 #include "core/SystemSettings.h"
 #include "settings/SettingsManager.h"
 #include "services/SensorService/SensorService.h"
+#include "services/ExperimentService/ExperimentService.h"
 #include "storage/StorageManager.h"
 #include "time/RTCManager.h"
 #include "web/WebSocketManager/WebSocketManager.h"
-#include "services/ExperimentService/ExperimentService.h"
 
 class WebServerManager 
 {
@@ -16,7 +16,8 @@ public:
     explicit WebServerManager(
         WebSocketManager& webSocketManager,
         ExperimentService& experimentService,
-        StorageManager& storageManager
+        StorageManager& storageManager,
+        SettingsManager& settingsManager
     );
 
     void begin();
@@ -30,6 +31,8 @@ private:
     
     StorageManager& storageManager_;
 
+    SettingsManager& settingsManager_;
+
     void registerRoutes();
 
     void handleStartExperiment(AsyncWebServerRequest* request);
@@ -38,4 +41,7 @@ private:
     void handleListExperiments(AsyncWebServerRequest* request);
 
     void handleDownloadCsv(AsyncWebServerRequest* request);
+
+    void handleGetSettings(AsyncWebServerRequest* request);
+    void handlePutSettings(AsyncWebServerRequest* request);
 };
