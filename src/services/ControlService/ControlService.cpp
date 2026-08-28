@@ -26,11 +26,11 @@ void ControlService::controlTemperature(const SensorData& data, const SystemSett
 
     if (waterOk && tempValid)
     {
-        if (data.temperature < settings.minTemp)
+        if (data.temperature < settings.minimalTemperatureCelcius)
         {
             shouldHeat = true;
         }
-        else if (data.temperature > settings.maxTemp)
+        else if (data.temperature > settings.maximalTemperatureCelcius)
         {
             shouldHeat = false;
         }
@@ -63,10 +63,10 @@ void ControlService::controlTemperature(const SensorData& data, const SystemSett
 
 void ControlService::controlStirring(const SystemSettings& settings) {
     const unsigned long stirIntervalMs =
-        static_cast<unsigned long>(settings.stirIntervalMinutes) * Config::MS_PER_MINUTE;
+        static_cast<unsigned long>(settings.stirringIntervalMinutes) * Config::MS_PER_MINUTE;
     
     const unsigned long stirDurationMs =
-        static_cast<unsigned long>(settings.stirDurationMinutes) * Config::MS_PER_MINUTE;
+        static_cast<unsigned long>(settings.stirringDurationMinutes) * Config::MS_PER_MINUTE;
 
     unsigned long now = millis();
 
