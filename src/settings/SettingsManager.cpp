@@ -1,62 +1,95 @@
-// #pragma once
+#include "utils/logger/Logger.h"
 #include "settings/SettingsManager.h"
 
-
-bool SettingsManager::begin() {
-    reset();
-    load();
-
-    return true;
+bool SettingsManager::begin() 
+{
+    return load();
 }
-
 
 bool SettingsManager::load() {
-    preferences.begin("settings", true);
+    if (!preferences_.begin("settings", true))
+    {
+        LOG_ERROR("[SettingsManager] Failed opening preferences.");
+        return false;
+    }
+    
+    settings_.maximalTemperatureCelcius = preferences_.getInt(
+        "maximalTemperatureCelcius", 
+        DEFAULT_SETTINGS.maximalTemperatureCelcius
+    );
 
-    settings.maxTemp = preferences.getInt("MaxTemp", DEFAULT_SETTINGS.maxTemp );
-    settings.minTemp = preferences.getInt("MinTemp", DEFAULT_SETTINGS.minTemp);
-    settings.stirIntervalMinutes = preferences.getInt("StirrInt", DEFAULT_SETTINGS.stirIntervalMinutes);
-    settings.stirDurationMinutes = preferences.getInt("StirrDur", DEFAULT_SETTINGS.stirDurationMinutes);
-    settings.lightOnHour = preferences.getInt("LightOn", DEFAULT_SETTINGS.lightOnHour);
-    settings.lightOffHour = preferences.getInt("LightOff", DEFAULT_SETTINGS.lightOffHour);
-    settings.measurementIntervalSeconds = preferences.getInt("MeasInt", DEFAULT_SETTINGS.measurementIntervalSeconds);
+    settings_.minimalTemperatureCelcius = preferences_.getInt(
+        "minimalTemperatureCelcius", 
+        DEFAULT_SETTINGS.minimalTemperatureCelcius
+    );
+    
+    settings_.stirringIntervalMinutes = preferences_.getInt(
+        "stirringIntervalMinutes", 
+        DEFAULT_SETTINGS.stirringIntervalMinutes
+    );
+   
+    settings_.stirringDurationMinutes = preferences_.getInt(
+        "stirringDurationMinutes", 
+        DEFAULT_SETTINGS.stirringDurationMinutes
+    );
+    
+    settings_.lightOnHour = preferences_.getInt(
+        "lightOnHour", 
+        DEFAULT_SETTINGS.lightOnHour
+    );
+    
+    settings_.lightOffHour = preferences_.getInt(
+        "lightOffHour", 
+        DEFAULT_SETTINGS.lightOffHour
+    );
+    
+    settings_.measurementIntervalSeconds = preferences_.getInt(
+        "measurementIntervalSeconds", 
+        DEFAULT_SETTINGS.measurementIntervalSeconds
+    );
 
-    preferences.end();
+    preferences_.end();
     
     return true;
 }
 
+bool SettingsManager::update(const SystemSettings& newSettings) {
+    
+    if (!preferences_.begin("settings", true))
+    {
+        LOG_ERROR("[SettingsManager] Failed opening preferences.");
+        return false;
+    }
+    
+    preferences_.putInt("MaxTemp", newSettings.maximalTemperatureCelcius);
 
-bool SettingsManager::save(const SystemSettings& newSettings) {
-    settings = newSettings;
+    preferences_.putInt("MinTemp", newSettings.minimalTemperatureCelcius);
 
-    preferences.begin("settings", false);
+    preferences_.putInt("StirrInt", newSettings.stirringIntervalMinutes);
 
-    preferences.putInt("MaxTemp", settings.maxTemp);
-    preferences.putInt("MinTemp", settings.minTemp);
-    preferences.putInt("StirrInt", settings.stirIntervalMinutes);
-    preferences.putInt("StirrDur", settings.stirDurationMinutes);
-    preferences.putInt("LightOn", settings.lightOnHour);
-    preferences.putInt("LightOff", settings.lightOffHour);
-    preferences.putInt("MeasInt", settings.measurementIntervalSeconds);
+    preferences_.putInt("StirrDur", newSettings.stirringDurationMinutes);
 
-    preferences.end();
+    preferences_.putInt("LightOn", newSettings.lightOnHour);
+
+    preferences_.putInt("LightOff", newSettings.lightOffHour);
+
+    preferences_.putInt("MeasInt", newSettings.measurementIntervalSeconds);
+    
+    preferences_.end();
+    
+    settings_ = newSettings;
 
     return true;
 }
 
-
-const SystemSettings& SettingsManager::getSettings() const{
-    return settings;
+const SystemSettings& SettingsManager::getSettings() const
+{
+    return settings_;
 }
 
-
-bool SettingsManager::reset() {
-    preferences.begin("settings", false);
-    preferences.clear();
-    preferences.end();
+bool SettingsManager::reset() 
+{
+    settings_ = DEFAULT_SETTINGS;
     
-    settings = DEFAULT_SETTINGS;
-    
-    return save(settings);
+    return update(settings_);
 }
