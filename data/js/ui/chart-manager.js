@@ -34,8 +34,8 @@ export class ChartManager {
                         data: [],
                         yAxisID: "turbidity",
 
-                        borderColor: "#E9C46A",
-                        backgroundColor: "#E9C46A",
+                        borderColor: "#C99A00",
+                        backgroundColor: "#C99A00",
                     },
                     {
                         label: "Füllvolumen",
@@ -58,34 +58,49 @@ export class ChartManager {
                         position: "left",
                         min: 0,
                         max: 50,
+                        display: true,
+
+                        ticks: {
+                            color: "#e53935",
+                        },
                     },
 
                     conductivity: {
                         type: "linear",
-                        position: "left",
+                        position: "right",
                         min: 0,
                         max: 2000,
-                        display: false,
+                        display: true,
+                        ticks: {
+                            color: "#2A9D8F",
+                        },
                     },
 
                     turbidity: {
                         type: "linear",
-                        position: "left",
+                        position: "right",
                         min: 0,
-                        max: 100,
-                        display: false,
+                        max: 1000,
+                        display: true,
+                        ticks: {
+                            color: "#C99A00",
+                        },
                     },
 
                     waterLevel: {
                         type: "linear",
-                        position: "right",
+                        position: "left",
                         min: 0,
                         max: 100,
-
+                        display: true,
                         grid: {
-                            drawOnChartArea: false
-                        }
-                    }
+                            drawOnChartArea: false,
+                        },
+
+                    ticks: {
+                            color: "#457B9D",
+                        },
+                    },
                 }
             }
         });
