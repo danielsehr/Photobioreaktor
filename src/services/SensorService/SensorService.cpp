@@ -1,11 +1,15 @@
 #include <Arduino.h>
+#include "drivers/DS18B20/DS18B20Driver.h"
 #include "services/SensorService/SensorService.h"
 #include "config/SystemConfig.h"
 #include "utils/logger/Logger.h"
 
 void SensorService::begin(){
     initializePins();
-    LOG_INFO("Sensor service initialized.");
+
+    DS18B20Driver_.begin();
+
+    LOG_INFO("[Sensor Service] Sensor service initialized.");
 }
 
 
