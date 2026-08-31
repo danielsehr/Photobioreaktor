@@ -7,7 +7,7 @@ bool SettingsManager::begin()
 }
 
 bool SettingsManager::load() {
-    if (!preferences_.begin("settings", true))
+    if (!preferences_.begin("settings", false))
     {
         LOG_ERROR("[SettingsManager] Failed opening preferences.");
         return false;
