@@ -40,9 +40,9 @@ void App::begin()
 
     settingsManager_.begin();
 
-    LOG_INFO("Application started.");
+    LOG_INFO("[App] Application started.");
 
-    LOG_INFO("Printing filesystem:");
+    LOG_INFO("[App] Printing filesystem:");
 
     storageManager_.listDirectory("/experiments");
 
@@ -57,8 +57,8 @@ void App::update()
     if (sensorService_.hasNewMeasurement())
     {   
         rtcManager_.update();
-        LOG_INFO("RTC Date: %s", rtcManager_.getDate());
-        LOG_INFO("RTC Time: %s", rtcManager_.getTime());
+        LOG_INFO("[App] RTC Date: %s", rtcManager_.getDate());
+        LOG_INFO("[App] RTC Time: %s", rtcManager_.getTime());
         
         const SensorData& measurement = sensorService_.latestMeasurement();
 
