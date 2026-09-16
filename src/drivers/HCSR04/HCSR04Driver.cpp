@@ -5,7 +5,7 @@ namespace
     constexpr float EMPTY_DISTANCE_CM = 19.0f;
     constexpr float SAFE_DISTANCE_CM = 5.0f;
 
-    constexpr unsigned long ECHO_TIMEOUT_US = 2600;
+    constexpr unsigned long ECHO_TIMEOUT_US = 26000;
     constexpr float DISTANCE_CONVERSION_FACTOR = 58.2f;
     }
 
