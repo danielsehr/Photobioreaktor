@@ -21,7 +21,7 @@ void WebSocketManager::begin(AsyncWebServer& server)
 
     server.addHandler(&webSocket_);
 
-    LOG_INFO("Websocket initialized.");
+    LOG_INFO("[WebSocketManager] Websocket initialized.");
 }
 
 
@@ -37,7 +37,7 @@ void WebSocketManager::onEvent(
     {
     case WS_EVT_CONNECT:
         {
-            LOG_INFO("Client connected.");
+            LOG_INFO("[WebSocketManager] Client connected.");
         
             newClient_ = client;
             
@@ -46,7 +46,7 @@ void WebSocketManager::onEvent(
 
     case WS_EVT_DISCONNECT:
         {
-            LOG_INFO("Client disconnected.");
+            LOG_INFO("[WebSocketManager] Client disconnected.");
         
             if (newClient_ == client)
                 {
@@ -65,7 +65,7 @@ void WebSocketManager::onEvent(
         LOG_INFO("%.*s", static_cast<int>(len),
                 reinterpret_cast<const char*>(data));
 
-        client->text("Message received.");
+        client->text("[WebSocketManager] Message received.");
 
         break;
     }
@@ -99,22 +99,3 @@ void WebSocketManager::clearNewClient()
 {
     newClient_ = nullptr;
 }
-
-
-// void WebSocketManager::broadcastSensorData()
-// {
-//     const auto& data = sensorManager.getData();
-
-//     JsonDocument doc;
-//     doc["uptimeSeconds"] = data.uptimeSeconds;
-//     doc["temperature"] = data.temperature;
-//     doc["conductivity"] = data.conductivity;
-//     doc["turbidity"] = data.turbidity;
-//     doc["waterLevel"] = data.waterLevel;
-
-//     String json;
-//     serializeJson(doc, json);
-
-//     // Send json as text websocket message to all connected clients
-//     ws.textAll(json);
-// }
