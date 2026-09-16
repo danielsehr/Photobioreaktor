@@ -57,7 +57,7 @@ void SensorService::update()
 
     newMeasurement_ = true;
 
-    LOG_INFO("Sensor updated.\n");
+    LOG_INFO("[Sensor Service] Sensor updated.\n");
     Logger::info(latest_);
 }
 
