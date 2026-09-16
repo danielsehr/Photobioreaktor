@@ -45,14 +45,6 @@ void SensorService::update()
     data.turbidity = 0;
     data.waterLevel = HCSR04Driver_.readWaterLevel();
 
-    // This needs to put in the driver
-    // if (!measurement.valid)
-    // {
-    //     LOG_WARNING("Invalid sensor reading.");
-
-    //     return;
-    // }
-
     latest_ = data;
 
     newMeasurement_ = true;
