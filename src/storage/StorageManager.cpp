@@ -11,7 +11,7 @@ void StorageManager::initializeFileSystem()
 {
     if (!LittleFS.begin(true))
     {
-        LOG_ERROR("Failed to mount LittleFS.");
+        LOG_ERROR("[StorageManager] Failed to mount LittleFS.");
         return;
     }
 
@@ -19,12 +19,12 @@ void StorageManager::initializeFileSystem()
     {
         if (!LittleFS.mkdir("/experiments"))
         {
-            LOG_ERROR("Failed to create experiments directory.");
+            LOG_ERROR("[StorageManager] Failed to create experiments directory.");
             return;
         }
     }
 
-    LOG_INFO("LittleFS mounted.");
+    LOG_INFO("[StorageManager] LittleFS mounted.");
 }
 
 
@@ -41,7 +41,7 @@ bool StorageManager::createExperiment(const Experiment& experiment)
 
     if (!file)
     {
-        // LOG_ERROR("Could not open csv file: %s", path);
+        LOG_ERROR("[StorageManager] Could not open csv file: %s", path);
         return false;
     }
 
@@ -67,7 +67,7 @@ bool StorageManager::appendMeasurement(
 
     if (!file)
     {
-        LOG_ERROR("Failed to open csv file.");
+        LOG_ERROR("[StorageManager] Failed to open csv file.");
         return false;
     }
 
@@ -96,7 +96,7 @@ bool StorageManager::createCsvPath(const Experiment& experiment, char* buffer) c
 
     if (written < 0 || static_cast<size_t>(written) >= Config::CSV_PATH_MAX)
     {
-        LOG_ERROR("Failed to create CSV path.");
+        LOG_ERROR("[StorageManager] Failed to create CSV path.");
         return false;
     }
 
@@ -136,7 +136,7 @@ void StorageManager::listDirectory(const char* path)
 
     if (!directory || !directory.isDirectory())
     {
-        LOG_ERROR("Failed to open directory: %s", path);
+        LOG_ERROR("[StorageManager] Failed to open directory: %s", path);
         return;
     }
 
@@ -161,7 +161,7 @@ std::size_t StorageManager::listExperimentIds(uint32_t* ids, std::size_t capacit
 
     if(!directory || !directory.isDirectory())
     {
-        LOG_ERROR("Failed to open experiments directory");
+        LOG_ERROR("[StorageManager] Failed to open experiments directory");
         return 0;
     }
 
