@@ -68,8 +68,8 @@ export class ChartManager {
                     conductivity: {
                         type: "linear",
                         position: "right",
-                        min: 0,
-                        max: 2000,
+                        // min: 0,
+                        // max: 2000,
                         display: true,
                         ticks: {
                             color: "#2A9D8F",
@@ -79,8 +79,8 @@ export class ChartManager {
                     turbidity: {
                         type: "linear",
                         position: "right",
-                        min: 0,
-                        max: 1000,
+                        // min: 0,
+                        // max: 1000,
                         display: true,
                         ticks: {
                             color: "#C99A00",
