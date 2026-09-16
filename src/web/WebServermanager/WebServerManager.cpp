@@ -27,7 +27,7 @@ void WebServerManager::begin()
 
     server_.begin();
 
-    LOG_INFO("HTTP server initialized.");
+    LOG_INFO("[WebServerManager] HTTP server initialized.");
 }
 
 void WebServerManager::registerRoutes()
@@ -102,18 +102,19 @@ void WebServerManager::handleStartExperiment(AsyncWebServerRequest *request)
 {
     if (!experimentService_.start(nullptr))
     {
-        request->send(409, "text/plain", "Could not start experiment.");
+        LOG_ERROR("[WebServerManager] Could not start experiment.");
+        request->send(409, "text/plain", "[WebServerManager] Could not start experiment.");
         return;
     }
 
-    request->send(200, "text/plain", "Experiment started.");
+    request->send(200, "text/plain", "[WebServerManager] Experiment started.");
 }
 
 void WebServerManager::handleStopExperiment(AsyncWebServerRequest *request)
 {
     experimentService_.stop();
 
-    request->send(200, "text/plain", "Experiment stopped.");
+    request->send(200, "text/plain", "[WebServerManager] Experiment stopped.");
 }
 
 void WebServerManager::handleExperimentStatus(AsyncWebServerRequest *request)
@@ -122,11 +123,11 @@ void WebServerManager::handleExperimentStatus(AsyncWebServerRequest *request)
 
     if (recording)
     {
-        request->send(200, "application/json", R"({"recording":true})");
+        request->send(200, "application/json", R"([WebServerManager] {"recording":true})");
     }
     else
     {
-        request->send(200, "application/json", R"({"recording":false})");
+        request->send(200, "application/json", R"([WebServerManager] {"recording":false})");
     }
 }
 
@@ -168,19 +169,22 @@ void WebServerManager::handleDownloadCsv(AsyncWebServerRequest *request)
 {
     if (!request->hasParam("id"))
     {
-        request->send(400, "text/plain", "Missing experiment ID.");
+        LOG_ERROR("[WebServerManager] Missing experiment ID.");
+        request->send(400, "text/plain", "[WebServerManager] Missing experiment ID.");
         return;
     }
 
     const char *idString = request->getParam("id")->value().c_str();
-
+    
     char *end = nullptr;
-
+    
     const unsigned long id = strtoul(idString, &end, 10);
-
+    
     if (*idString == '\0' || *end != '\0')
     {
-        request->send(400, "text/plain", "Invalid experiment ID");
+        
+        LOG_ERROR("[WebServerManager] Invalid experiment ID.");
+        request->send(400, "text/plain", "[WebServerManager] Invalid experiment ID");
         return;
     }
 
@@ -191,8 +195,8 @@ void WebServerManager::handleDownloadCsv(AsyncWebServerRequest *request)
 
     if (!storageManager_.createCsvPath(experiment, path))
     {
-        LOG_ERROR("Failed to generate experiment CSV path.");
-        request->send(500, "text/plain", "Failed to generate file path.");
+        LOG_ERROR("[WebServerManager] Failed to generate experiment CSV path.");
+        request->send(500, "text/plain", "[WebServerManager] Failed to generate file path.");
         return;
     }
 
@@ -200,8 +204,8 @@ void WebServerManager::handleDownloadCsv(AsyncWebServerRequest *request)
 
     if (!file)
     {
-        LOG_ERROR("Experiment file not found: %s", path);
-        request->send(404, "text/plain", "Experiment file not found.");
+        LOG_ERROR("[WebServerManager] Experiment file not found: %s", path);
+        request->send(404, "text/plain", "[WebServerManager] Experiment file not found.");
         return;
     }
 
@@ -265,8 +269,8 @@ void WebServerManager::handlePutSettings(AsyncWebServerRequest* request, uint8_t
 
     if (error)
     {
-        request->send(400, "text/plain", "Invalid JSON.");
         LOG_ERROR("[WebServerManager] Invalid JSON.");
+        request->send(400, "text/plain", "[WebServerManager] Invalid JSON.");
         return;
     }
     
@@ -320,12 +324,9 @@ void WebServerManager::handlePutTime(AsyncWebServerRequest* request, uint8_t* da
 
     const char* time = json["time"];
 
-    Serial.println("WebServerManager, data and time: ");
-    Serial.println(date);
-    Serial.println(time);
-
     if (!rtcManager_.setDateTime(date, time))
     {
+        LOG_ERROR("[WebServerManager] Invalid date or time.");
         request->send(400, "text/plain", "Invalid date or time.");
         return;
     }
